@@ -1,6 +1,19 @@
 #include <stdio.h>
+#include <stdlib.h>
 
+void addRepair() {
+    int Cost
+    char RepairID[4],Carmodel[50],RPDetails[200]
+    printf("\nรหัสการซ่อมแซม; ");
+    printf("\nชื่อรถยนต์; ");
+    printf("\nรายละเอียดการซ่อม; ");
+    printf("\nค่าใช้จ่าย; ");
+    scanf("\nรหัสการซ่อมแซม; ");
+    scanf("\nชื่อรถยนต์; ");
+    scanf("\nรายละเอียดการซ่อม; ");
+    scanf("\nค่าใช้จ่าย; ");
 
+}
 
 
 int main() {
@@ -18,12 +31,11 @@ int main() {
         scanf("%d", &choice);
 
         switch (choice) {
-            //case 1: addRepair(); break;
-            //case 2: displayAll(); break;
-            //case 3: searchRepair(); break;
-            //case 4: updateRepair(); break;
+            case 1: addRepair(); break;
+            //case 2: searchRepair(); break;
+            //case 3: updateRepair(); break;
+            //case 4: deleteRepair(); break;
             //case 5: deleteRepair(); break;
-            //case 6: reportSummary(); break;
             //case 0:
                // printf("ออกจากโปรแกรมแล้ว ขอบคุณที่ใช้งาน!\n");
                 //exit(0);
