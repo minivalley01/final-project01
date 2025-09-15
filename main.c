@@ -2,16 +2,16 @@
 #include <stdlib.h>
 
 void addRepair() {
-    int Cost;
-    char RepairID[4],Carmodel[50],RPDetails[200];
-    printf("\nรหัสการซ่อมแซม; ");
-    scanf("%s", RepairID);
-    printf("\nชื่อรถยนต์; ");
-    scanf("%s", Carmodel);
-    printf("\nรายละเอียดการซ่อม; ");
-    scanf("%s", RPDetails);
-    printf("\nค่าใช้จ่าย; ");
-    scanf("%d", Cost);
+    int Expense;
+    char ID[4],Car[50],Details[200];
+    printf("\n1) ระบบเพิ่มข้อมูลการซ่อมเเซมใหม่");
+    printf("\nRepairID; "); scanf("%s", ID);
+    printf("\nCarmodel; "); scanf("%s", Car);
+    printf("\nRepairdetails; "); scanf("%s", Details);
+    printf("\nCost; "); scanf("%d", Expense);
+    
+
+
 
 }
 
