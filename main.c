@@ -2,16 +2,16 @@
 #include <stdlib.h>
 
 void addRepair() {
-    int Cost
-    char RepairID[4],Carmodel[50],RPDetails[200]
+    int Cost;
+    char RepairID[4],Carmodel[50],RPDetails[200];
     printf("\nรหัสการซ่อมแซม; ");
+    scanf("%s", RepairID);
     printf("\nชื่อรถยนต์; ");
+    scanf("%s", Carmodel);
     printf("\nรายละเอียดการซ่อม; ");
+    scanf("%s", RPDetails);
     printf("\nค่าใช้จ่าย; ");
-    scanf("\nรหัสการซ่อมแซม; ");
-    scanf("\nชื่อรถยนต์; ");
-    scanf("\nรายละเอียดการซ่อม; ");
-    scanf("\nค่าใช้จ่าย; ");
+    scanf("%d", Cost);
 
 }
 
@@ -41,7 +41,7 @@ int main() {
                 //exit(0);
             //default:
                 //printf("เลือกเมนูไม่ถูกต้อง กรุณาลองใหม่\n");
-        //}
+        }
     }
 
     return 0;
