@@ -9,6 +9,16 @@ void addRepair() {
     printf("\nCarmodel; "); scanf("%s", Car);
     printf("\nRepairdetails; "); scanf("%s", Details);
     printf("\nCost; "); scanf("%d", Expense);
+
+    FILE *ADD = fopen("data.csv", "a"); // เปิดไฟล์
+    if (ADD == NULL) {
+        printf("ERROR\n");
+        return 1;
+    }
+    fprintf(ADD, "%s,%s,%s,%d\n", ID,Car,Details,Expense);
+    fclose(ADD);
+    printf("SUCCESS\n");
+}
     
 
 
@@ -35,7 +45,7 @@ int main() {
             //case 2: searchRepair(); break;
             //case 3: updateRepair(); break;
             //case 4: deleteRepair(); break;
-            //case 5: deleteRepair(); break;
+            //case 5: showRepair(); break;
             //case 0:
                // printf("ออกจากโปรแกรมแล้ว ขอบคุณที่ใช้งาน!\n");
                 //exit(0);
