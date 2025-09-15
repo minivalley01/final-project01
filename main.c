@@ -1,11 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+
+
+int checkID(char *ID) {
+    
+    if (strlen(ID) > 4) {
+        printf("RepairID ไม่ถูกต้อง\n");
+        return 0; 
+    }
+    return 1; // ผ่านการตรวจสอบ
+}
+
+
+
 
 void addRepair() {
     int Expense;
     char ID[4],Car[50],Details[200];
     printf("\n1) ระบบเพิ่มข้อมูลการซ่อมเเซมใหม่");
-    printf("\nRepairID; "); scanf("%s", ID);
+    while (1) {
+      printf("\nRepairID; "); scanf("%s", ID);
+      if (checkID(ID)) {
+        break; // ออกจากลูปเพราะ ID ถูกต้องแล้ว
+        } else {
+            printf("Try agin\n");
+        }
+    }
     printf("\nCarmodel; "); scanf("%s", Car);
     printf("\nRepairdetails; "); scanf("%s", Details);
     printf("\nCost; "); scanf("%d", Expense);
@@ -13,7 +35,7 @@ void addRepair() {
     FILE *ADD = fopen("data.csv", "a"); // เปิดไฟล์
     if (ADD == NULL) {
         printf("ERROR\n");
-        return 1;
+        return ;
     }
     fprintf(ADD, "%s,%s,%s,%d\n", ID,Car,Details,Expense);
     fclose(ADD);
@@ -23,7 +45,7 @@ void addRepair() {
 
 
 
-}
+
 
 
 int main() {
