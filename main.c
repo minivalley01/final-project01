@@ -20,6 +20,11 @@ void addRepair() {
     int Expense;
     char ID[4],Car[50],Details[200];
     printf("\n1) ระบบเพิ่มข้อมูลการซ่อมเเซมใหม่");
+    FILE *ADD = fopen("data.csv","a"); // เปิดไฟล์
+    if (ADD == NULL) {
+        printf("ERROR\n");
+        return ;
+    }
     while (1) {
       printf("\nRepairID; "); scanf("%s", ID);
       if (checkID(ID)) {
@@ -32,12 +37,8 @@ void addRepair() {
     printf("\nRepairdetails; "); scanf("%s", Details);
     printf("\nCost; "); scanf("%d", Expense);
 
-    FILE *ADD = fopen("data.csv", "a"); // เปิดไฟล์
-    if (ADD == NULL) {
-        printf("ERROR\n");
-        return ;
-    }
     fprintf(ADD, "%s,%s,%s,%d\n", ID,Car,Details,Expense);
+    
     fclose(ADD);
     printf("SUCCESS\n");
 }
