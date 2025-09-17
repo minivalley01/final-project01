@@ -7,31 +7,23 @@
 int checkID(char *ID) { //  เช็คไอดี
     FILE *fp = fopen("data.csv", "r");
     if (fp == NULL) return 1; // ถ้าไฟล์ยังไม่มี ให้ผ่านไปเลย
-
     if (strlen(ID) > 4 || strlen(ID) < 4) { //เช็คจำนวนตัวอักษร
         printf("RepairID is incorrect\n");
-        //return 0;
-    } 
-       //return 1; // จำนวนถูกต้อง
-       
+        return 0;
+    }    
     char line[200];  //เช็คว่าซ้ำไหม
     while (fgets(line, sizeof(line), fp)) {
     char existingID[10];
-    sscanf(line, "%[^,]", existingID); // อ่านข้อมูลก่อนเครื่องหมาย , (คือ ID)
+    sscanf(line, "%[^,]", existingID); // อ่านข้อมูลก่อนเครื่องหมาย , 
     if (strcmp(existingID, ID) == 0) {
-            printf("RepairID has been used\n");
+            printf("RepairID has already been used\n");
             fclose(fp);
             return 0; // พบว่า ID ซ้ำ
         }
-     return 1; // ไม่ซ้ำ
     }
     fclose(fp);
-    return 1; // ผ่านการตรวจสอบ
-    
-    
+    return 1; // ไม่ซ้ำเเละผ่านการตรวจสอบ
 }
-
-
 
 
 void addRepair() {
@@ -44,15 +36,20 @@ void addRepair() {
         return ;
     }
     while (1) {
-      printf("\nRepairID; "); scanf("%s",&ID);
+      printf("\nRepairID; "); scanf("%s",ID);
       if (checkID(ID)) {
-        break; // ออกจากลูปเพราะ ID ถูกต้องแล้ว
+        break; // ออกจากลูป ID ถูกแล้ว
         } else {
-            printf("Try agin\n");
+            printf("Pleas try agin\n");
         }
     }
-    printf("\nCarmodel; "); scanf("%s", &Car);
-    printf("\nRepairdetails; "); scanf("%s", &Details);
+    printf("\nCar model: ");
+    getchar(); // เคลียร์ buffer ก่อนหน้า
+    fgets(Car, sizeof(Car), stdin);
+    Car[strcspn(Car, "\n")] = 0; //เอา \n ออก
+    printf("\nRepair details; ");  
+    fgets(Details, sizeof(Details), stdin);
+    Details[strcspn(Details, "\n")] = 0;
     printf("\nCost; "); scanf("%d", &Expense);
 
     fprintf(ADD, "%s,%s,%s,%d\n", ID,Car,Details,Expense);
