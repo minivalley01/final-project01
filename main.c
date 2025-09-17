@@ -36,7 +36,7 @@ int checkID(char *ID) { //  เช็คไอดี
 
 void addRepair() {
     int Expense;
-    char ID[4],Car[50],Details[200];
+    char ID[10],Car[70],Details[200];
     printf("\n1) ระบบเพิ่มข้อมูลการซ่อมเเซมใหม่");
     FILE *ADD = fopen("data.csv","a"); // เปิดไฟล์
     if (ADD == NULL) {
