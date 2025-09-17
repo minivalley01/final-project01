@@ -5,28 +5,30 @@
 
 
 int checkID(char *ID) { //  เช็คไอดี
-    
-    if (strlen(ID) > 4 || strlen(ID) < 4) { //เช็คจำนวนตัวอักษร
-        printf("RepairID is incorrect\n");
-        return 0; 
-        
-        FILE *fp = fopen("data.csv", "r");
+    FILE *fp = fopen("data.csv", "r");
     if (fp == NULL) return 1; // ถ้าไฟล์ยังไม่มี ให้ผ่านไปเลย
 
-    char line[300];                            //เช็คว่าซ้ำไหม
+    if (strlen(ID) > 4 || strlen(ID) < 4) { //เช็คจำนวนตัวอักษร
+        printf("RepairID is incorrect\n");
+        //return 0;
+    } 
+       //return 1; // จำนวนถูกต้อง
+       
+    char line[200];  //เช็คว่าซ้ำไหม
     while (fgets(line, sizeof(line), fp)) {
-        char existingID[10];
-        sscanf(line, "%d", existingID); // อ่านข้อมูลก่อนเครื่องหมาย , (คือ ID)
-        if (strcmp(existingID, id) == 0) {
+    char existingID[10];
+    sscanf(line, "%[^,]", existingID); // อ่านข้อมูลก่อนเครื่องหมาย , (คือ ID)
+    if (strcmp(existingID, ID) == 0) {
             printf("RepairID has been used\n");
             fclose(fp);
             return 0; // พบว่า ID ซ้ำ
         }
+     return 1; // ไม่ซ้ำ
     }
     fclose(fp);
-    return 1; // ไม่ซ้ำ
-    }
     return 1; // ผ่านการตรวจสอบ
+    
+    
 }
 
 
