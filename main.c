@@ -17,8 +17,7 @@ int checkID(char *ID) { //  เช็คไอดี
     sscanf(line, "%[^,]", existingID); // อ่านข้อมูลก่อนเครื่องหมาย , 
     if (strcmp(existingID, ID) == 0) {
             printf("RepairID has already been used\n");
-            fclose(fp);
-            return 0; // พบว่า ID ซ้ำ
+            return 0; 
         }
     }
     fclose(fp);
@@ -30,7 +29,7 @@ void addRepair() {
     int Expense;
     char ID[10],Car[70],Details[200];
     printf("\n1) ระบบเพิ่มข้อมูลการซ่อมเเซมใหม่");
-    FILE *ADD = fopen("data.csv","a"); // เปิดไฟล์
+    FILE *ADD = fopen("data.csv","a"); 
     if (ADD == NULL) {
         printf("ERROR\n");
         return ;
