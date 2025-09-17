@@ -51,7 +51,6 @@ void addRepair() {
     fgets(Details, sizeof(Details), stdin);
     Details[strcspn(Details, "\n")] = 0;
     printf("\nCost; "); scanf("%d", &Expense);
-
     fprintf(ADD, "%s,%s,%s,%d\n", ID,Car,Details,Expense);
     
     fclose(ADD);
