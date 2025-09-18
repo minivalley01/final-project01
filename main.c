@@ -39,7 +39,7 @@ void addRepair() {
       if (checkID(ID)) {
         break; // ออกจากลูป ID ถูกแล้ว
         } else {
-            printf("Pleas try agin\n");
+            printf("Please try agin\n");
         }
     }
     printf("\nCar model: ");
