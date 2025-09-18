@@ -82,11 +82,11 @@ int main() {
             //case 3: updateRepair(); break;
             //case 4: deleteRepair(); break;
             //case 5: showRepair(); break;
-            //case 0:
-               // printf("ออกจากโปรแกรมแล้ว ขอบคุณที่ใช้งาน!\n");
-                //exit(0);
-            //default:
-                //printf("เลือกเมนูไม่ถูกต้อง กรุณาลองใหม่\n");
+            case 0:
+               printf("ออกจากโปรแกรมแล้ว ขอบคุณที่ใช้งาน!\n");
+                exit(0);
+            default:
+                printf("เลือกเมนูไม่ถูกต้อง กรุณาลองใหม่\n");
         }
     }
 
