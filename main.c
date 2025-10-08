@@ -411,7 +411,7 @@ void updateRecord(const char *filename) {
     records[found].problem[strcspn(records[found].problem, "\n")] = 0;
     
 
-    //(เฉพาะตัวเลข)
+    
     char costStr[20];
     int validCost;
     do {
@@ -431,11 +431,25 @@ void updateRecord(const char *filename) {
     saveData(records, count, filename);
     printf("\n✅ อัปเดตข้อมูลเรียบร้อยแล้ว!\n");
     printTable(records, count, filename);
-    printf("ต้องการเพิ่มข้อมูลอีกหรือไม่? (y/n): ");
-        choice = getchar();
-        while ((c = getchar()) != '\n' && c != EOF);
-    } while (choice == 'y' || choice == 'Y');
-}
+    while (1) {
+            printf("ต้องการอัพเดตต่อหรือไม่?(y/n): ");
+            choice = getchar();
+            while (getchar() != '\n'); 
+
+            if (choice == 'y' || choice == 'Y') {
+                break; 
+            } 
+            else if (choice == 'n' || choice == 'N') {
+                printf("✅ จบการทำงาน\n");
+                return; 
+            } 
+            else {
+                printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
+            }
+        }
+    }while (1);
+} 
+    
 
 
 
