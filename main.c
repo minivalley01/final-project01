@@ -162,16 +162,16 @@ void saveData(struct Record records[], int count, const char *filename) {
     }
     fclose(fp);
 }
-int isPrintable(int status) {
-    return status == 1; // 1 = แสดงได้, 0 = ถูกลบ
-}
+//int isPrintable(int status) {
+   // return status == 1; // 1 = แสดงได้, 0 = ถูกลบ
+//}
 void printTable(struct Record records[], int count, const char *filename) {
     printf("\n--- ข้อมูลทั้งหมดจากไฟล์ %s ---\n", filename);
     printf("+----------+----------------------+--------------------------+------------+\n");
     printf("| RepairID | Car Model            | Repair Details           | Cost (฿)   |\n");
     printf("+----------+----------------------+--------------------------+------------+\n");
     for (int i = 0; i < count; i++) {
-        if (isPrintable(records[i].status)) {
+        if (records[i].status == 1) {
         printf("| %-8s | %-20s | %-24s | %-10d |\n",
                records[i].id,
                records[i].model,
@@ -243,7 +243,7 @@ void addRepair() {
             }
         }
         int c; while ((c = getchar()) != '\n' && c != EOF);
-        fprintf(ADD, "%s,%s,%s,%d,1\n", ID, Car, Details, Expense);
+        fprintf(ADD, "%s,%s,%s,%d,%d\n", ID, Car, Details, Expense,1);
         fclose(ADD);
         printf("✅ SUCCESS\n");
         printf("ต้องการเพิ่มข้อมูลอีกหรือไม่?(y/n): ");
@@ -295,12 +295,14 @@ void searchRepair() {
         
         while (fgets(line, sizeof(line), fp)) {
             char ID[10], Model[50], Problem[200];
-            int Cost;
+             int Cost, Status;
 
             line[strcspn(line, "\n")] = 0;
 
-            if (sscanf(line, "%[^,],%[^,],%[^,],%d", ID, Model, Problem, &Cost) != 4)
+            if (sscanf(line, "%[^,],%[^,],%[^,],%d,%d", ID, Model, Problem, &Cost, &Status) != 5)
                 continue;
+
+            if (Status == 0) continue; // ข้าม record ที่ถูกลบ
 
             trim(ID);
             trim(Model);
@@ -365,6 +367,7 @@ void updateRepair(const char *filename) {
 
         int found = -1;
         for (int i = 0; i < count; i++) {
+             
             char tempID[20];
             strcpy(tempID, records[i].id);
             toUpperStr(tempID);
@@ -372,6 +375,7 @@ void updateRepair(const char *filename) {
                 found = i;
                 break;
             }
+          
         }
         if (found == -1) {
             printf("❌ ไม่พบ ID นี้ในระบบ\n");
@@ -554,9 +558,10 @@ int main() {
                      printf("กำลังกลับไปหน้าเมนู...\n");
                     }
             break;
-            case 5: struct Record records[MAX_RECORDS];
-                int count = loadData(records,"data.csv");
-                printTable(records,count,"data.csv");
+            case 5:{ struct Record records[MAX_RECORDS];
+                    int count = loadData(records,"data.csv");
+                    printTable(records,count,"data.csv");
+            }
             break;
             case 0:
                printf("ออกจากโปรแกรมแล้ว ขอบคุณที่ใช้งาน!\n");
