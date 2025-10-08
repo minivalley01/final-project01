@@ -133,6 +133,15 @@ void trim(char *str) {  // ตัด space/tab ข้างหน้าและ
 }
 
 
+int hasLetter(const char *s) {
+    while (*s) {
+        if (isalpha(*s)) return 1;
+        s++;
+    }
+    return 0;
+}
+
+
 void searchRepair() {
     char keyword[50];
     printf("กรอกคีย์เวิร์ดค้นหา(ID/Car): ");
@@ -179,7 +188,7 @@ void searchRepair() {
         strcpy(ID_l, ID); strToLower(ID_l);
         strcpy(Model_l, Model); strToLower(Model_l);
 
-        if (strstr(ID_l, keyword) != NULL || strstr(Model_l, keyword) != NULL) {
+        if ((hasLetter(ID_l) && strstr(ID_l, keyword) != NULL) || strstr(Model_l, keyword) != NULL) {
             printf("%s| %-6s |%s %-15s |%s %-20s |%s %-8d |%s\n",
                    BLUE, ID, YELLOW, Model, RED, Problem, CYAN, Cost, RESET);
             found = 1;
@@ -219,7 +228,12 @@ int main() {
                      printf("กำลังกลับไปหน้าเมนู\n");
                     }
             break; 
-            case 2: searchRepair(); break;
+            case 2: if (confirmAction("คุณต้องการค้นหาข้อมูลการซ่อมเเซมใช่ไหม")) {
+                        searchRepair();
+                    } else {
+                     printf("กำลังกลับไปหน้าเมนู...\n");
+                    }
+            break; 
             //case 3: updateRepair(); break;
             //case 4: deleteRepair(); break;
             //case 5: showRepair(); break;
