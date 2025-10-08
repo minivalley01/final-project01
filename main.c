@@ -131,7 +131,7 @@ void searchRepair() {
         return;
     }
 
-    char line[200];
+    char line[512];
     int found = 0;
 
     // ANSI สีสำหรับแต่ละคอลัมน์
@@ -144,21 +144,20 @@ void searchRepair() {
 
 
     while (fgets(line, sizeof(line), fp)) {
-        char ID[10], Model[20], Problem[50];
+        char ID[10], Model[50], Problem[200];
         int Cost;
-
-        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%d", ID, Model, Problem, &Cost);
+        line[strcspn(line, "\n")] = 0;
+        sscanf(line, "%[^,],%[^,],%[^,],%d", ID, Model, Problem, &Cost);
 
         // แปลงเป็นพิมพ์เล็กสำหรับตรวจสอบ keyword
-        char ID_l[10], Model_l[20], Problem_l[50];
+        char ID_l[10], Model_l[50], Problem_l[200];
         strcpy(ID_l, ID); strToLower(ID_l);
-        
         strcpy(Model_l, Model); strToLower(Model_l);
         strcpy(Problem_l, Problem); strToLower(Problem_l);
 
         if (strstr(ID_l, keyword) != NULL || 
             strstr(Model_l, keyword) != NULL || strstr(Problem_l, keyword) != NULL) {
-            printf("%s| %-6s |%s %-10s |%s %-15s |%s %-6d |%s\n",
+            printf("%s| %-6s |%s %-15s |%s %-20s |%s %-8d |%s\n",
                    BLUE, ID, YELLOW, Model, RED, Problem, CYAN, Cost, RESET);
             found = 1;
         }
