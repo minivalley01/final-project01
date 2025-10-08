@@ -12,6 +12,7 @@ struct Record {
     char model[50];
     char problem[100];
     int cost;
+    int status; // 1=active, 0=deleted
 };
 
 
@@ -134,11 +135,12 @@ int loadData(struct Record records[], const char *filename) {
     char line[MAX_LINE];
     while (fgets(line, sizeof(line), fp)) {
         line[strcspn(line, "\n")] = 0;
-        sscanf(line, "%[^,],%[^,],%[^,],%d",
+        sscanf(line, "%[^,],%[^,],%[^,],%d,%d",
                records[count].id,
                records[count].model,
                records[count].problem,
                &records[count].cost);
+               &records[count].status);
         count++;
     }
     fclose(fp);
@@ -151,11 +153,12 @@ void saveData(struct Record records[], int count, const char *filename) {
         return;
     }
     for (int i = 0; i < count; i++) {
-        fprintf(fp, "%s,%s,%s,%d\n",
+        fprintf(fp, "%s,%s,%s,%d,%d\n",
                 records[i].id,
                 records[i].model,
                 records[i].problem,
                 records[i].cost);
+                int status; // 1=active, 0=deleted
     }
     fclose(fp);
 }
@@ -234,7 +237,7 @@ void addRepair() {
             }
         }
         int c; while ((c = getchar()) != '\n' && c != EOF);
-        fprintf(ADD, "%s,%s,%s,%d\n", ID, Car, Details, Expense);
+        fprintf(ADD, "%s,%s,%s,%d,1\n", ID, Car, Details, Expense);
         fclose(ADD);
         printf("✅ SUCCESS\n");
         printf("ต้องการเพิ่มข้อมูลอีกหรือไม่?(y/n): ");
@@ -426,12 +429,12 @@ void updateRecord(const char *filename) {
         while (1) {
             printf("ต้องการอัพเดตต่อหรือไม่?(y/n): ");
             choice = getchar();
-            while (getchar() != '\n'); // เคลียร์ buffer
+            while (getchar() != '\n'); 
 
             if (choice == 'y' || choice == 'Y') {
-                break; // กลับไปอัปเดตรอบใหม่
+                break; 
             } else if (choice == 'n' || choice == 'N') {
-                continueUpdate = 0; // ออกจากลูปรอบใหญ่
+                continueUpdate = 0; 
                 printf("✅ กลับสู่เมนูหลัก\n");
                 break;
             } else {
@@ -474,13 +477,12 @@ int main() {
                     }
             break; 
             case 3: if (confirmAction("คุณต้องการอัพเดตข้อมูลการซ่อมเเซมใช่ไหม")) {
-                        updateRecord("data.csv");
-                        return 0;
+                        updateRecord("data.csv");    
                     } else {
                      printf("กำลังกลับไปหน้าเมนู...\n");
                     }
             break; 
-            //case 4: deleteRepair(); break;
+            case 4: deleteRepair(); break;
             //case 5: showRepair(); break;
             case 0:
                printf("ออกจากโปรแกรมแล้ว ขอบคุณที่ใช้งาน!\n");
