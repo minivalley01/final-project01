@@ -144,22 +144,22 @@ void searchRepair() {
 
 
     while (fgets(line, sizeof(line), fp)) {
-        char ID[10], Brand[20], Model[20], Problem[50];
+        char ID[10], Model[20], Problem[50];
         int Cost;
 
-        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%d", ID, Brand, Model, Problem, &Cost);
+        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%d", ID, Model, Problem, &Cost);
 
         // แปลงเป็นพิมพ์เล็กสำหรับตรวจสอบ keyword
-        char ID_l[10], Brand_l[20], Model_l[20], Problem_l[50];
+        char ID_l[10], Model_l[20], Problem_l[50];
         strcpy(ID_l, ID); strToLower(ID_l);
-        strcpy(Brand_l, Brand); strToLower(Brand_l);
+        
         strcpy(Model_l, Model); strToLower(Model_l);
         strcpy(Problem_l, Problem); strToLower(Problem_l);
 
-        if (strstr(ID_l, keyword) != NULL || strstr(Brand_l, keyword) != NULL ||
+        if (strstr(ID_l, keyword) != NULL || 
             strstr(Model_l, keyword) != NULL || strstr(Problem_l, keyword) != NULL) {
-            printf("%s| %-6s |%s %-10s |%s %-10s |%s %-15s |%s %-6d |%s\n",
-                   BLUE, ID, GREEN, Brand, YELLOW, Model, RED, Problem, CYAN, Cost, RESET);
+            printf("%s| %-6s |%s %-10s |%s %-15s |%s %-6d |%s\n",
+                   BLUE, ID, YELLOW, Model, RED, Problem, CYAN, Cost, RESET);
             found = 1;
         }
     }
