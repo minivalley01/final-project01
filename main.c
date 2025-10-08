@@ -144,10 +144,18 @@ int hasLetter(const char *s) {
 
 void searchRepair() {
     char keyword[50];
-    printf("กรอกคีย์เวิร์ดค้นหา(ID/Car): ");
-    getchar(); // เคลียร์ buffer
-    fgets(keyword, sizeof(keyword), stdin);
-    keyword[strcspn(keyword, "\n")] = 0; // ตัด \n
+    char choice;
+    do {
+        while (1) {
+        printf("กรอกคีย์เวิร์ดค้นหา(ID/Car) อย่างน้อย 2 ตัว: ");
+        
+        fgets(keyword, sizeof(keyword), stdin);
+        keyword[strcspn(keyword, "\n")] = 0; // ตัด \n
+
+        if (strlen(keyword) >= 2) break;  // ผ่านเงื่อนไข
+        printf("❌ ต้องกรอกอย่างน้อย 2 ตัวอักษร!\n");
+    }
+
     strToLower(keyword);
 
     FILE *fp = fopen("data.csv", "r");
@@ -200,7 +208,13 @@ void searchRepair() {
     }
 
     fclose(fp);
+    printf("ต้องการค้นหาต่อหรือไม่?(y/n): ");
+        choice = getchar();
+        while (getchar() != '\n'); // เคลียร์ buffer
+
+    } while (choice == 'y' || choice == 'Y');
 }
+
 
 
 
