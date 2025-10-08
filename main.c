@@ -318,7 +318,9 @@ void searchRepair() {
 void updateRecord(const char *filename) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
-
+    int choice;
+    int c;
+ do {
     if (count == 0) {
         printf("ไม่มีข้อมูลให้อัปเดต\n");
         return;
@@ -357,6 +359,11 @@ void updateRecord(const char *filename) {
         fgets(records[found].id, sizeof(records[found].id), stdin);
         records[found].id[strcspn(records[found].id, "\n")] = 0;
     } while (!hasLetter(records[found].id));
+     if (checkID(records[found].id)) {
+                break; 
+            } else {
+                printf("Please try again\n");
+            }
     toUpperStr(records[found].id);
 
     // อัปเดต Model
@@ -367,11 +374,10 @@ void updateRecord(const char *filename) {
     } while (!hasLetterCount(records[found].model,2));
 
     // อัปเดต Problem
-    do {
-        printf("Repair Details ใหม่: ");
-        fgets(records[found].problem, sizeof(records[found].problem), stdin);
-        records[found].problem[strcspn(records[found].problem, "\n")] = 0;
-    } while (!hasLetterCount(records[found].model,3));
+    printf("Repair Details : ");
+    fgets(records[found].problem, sizeof(records[found].problem), stdin);
+    records[found].problem[strcspn(records[found].problem, "\n")] = 0;
+    
 
     // อัปเดต Cost (เฉพาะตัวเลข)
     char costStr[20];
@@ -392,6 +398,11 @@ void updateRecord(const char *filename) {
 
     saveData(records, count, filename);
     printf("\n✅ อัปเดตข้อมูลเรียบร้อยแล้ว!\n");
+    printTable(records, count, filename);
+    printf("ต้องการเพิ่มข้อมูลอีกหรือไม่? (y/n): ");
+        choice = getchar();
+        while ((c = getchar()) != '\n' && c != EOF); // เคลียร์ buffer
+    } while (choice == 'y' || choice == 'Y');
 }
 
 
