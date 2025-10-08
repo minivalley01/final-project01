@@ -340,115 +340,106 @@ void searchRepair() {
 void updateRecord(const char *filename) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
-    int choice;
-    int c;
- do {
     if (count == 0) {
-        printf("ไม่มีข้อมูลให้อัปเดต\n");
+        printf("❌ ไม่มีข้อมูลให้อัปเดต\n");
         return;
     }
 
-    printTable(records, count, filename);
-    
+    int continueUpdate = 1;
+    while (continueUpdate) {
+        printTable(records, count, filename);
 
-    
-    char targetID[20];
-    printf("\nกรอก RepairID ที่ต้องการอัปเดต: ");
-    fgets(targetID, sizeof(targetID), stdin);
-    targetID[strcspn(targetID, "\n")] = 0;
-    toUpperStr(targetID);
+        char targetID[20];
+        printf("\nกรอก RepairID ที่ต้องการอัปเดต: ");
+        fgets(targetID, sizeof(targetID), stdin);
+        targetID[strcspn(targetID, "\n")] = 0;
+        toUpperStr(targetID);
 
-    int found = -1;
-    for (int i = 0; i < count; i++) {
-        char tempID[20];
-        strcpy(tempID, records[i].id);
-        toUpperStr(tempID);
-        if (strcmp(tempID, targetID) == 0) {
-            found = i;
-            break;
-        }
-    }
-
-    if (found == -1) {
-        printf("❌ ไม่พบ ID นี้ในระบบ\n");
-        return;
-    }
-
-    printf("\n--- อัปเดตรายการ ID: %s ---\n", records[found].id);
-    
-   while (1) {
-    printf("RepairID: ");
-    fgets(records[found].id, sizeof(records[found].id), stdin);
-    records[found].id[strcspn(records[found].id, "\n")] = 0;
-
-    
-    if (!hasLetter(records[found].id)) {
-        printf("❌ ID ต้องมีตัวอักษรอย่างน้อย 1 ตัว\n");
-        continue;  
-    }
-
-    
-    if (!checkID(records[found].id)) {
-        printf("❌ ID นี้ถูกใช้ไปแล้ว โปรดลองใหม่\n");
-        continue;
-    }
-
-    
-    break;
-}
-    toUpperStr(records[found].id);
-
-   
-    do {
-        printf("Car Model: ");
-        fgets(records[found].model, sizeof(records[found].model), stdin);
-        records[found].model[strcspn(records[found].model, "\n")] = 0;
-    } while (!hasLetterCount(records[found].model,2));
-
-    
-    printf("Repair Details : ");
-    fgets(records[found].problem, sizeof(records[found].problem), stdin);
-    records[found].problem[strcspn(records[found].problem, "\n")] = 0;
-    
-
-    
-    char costStr[20];
-    int validCost;
-    do {
-        validCost = 1;
-        printf("Cost: ");
-        fgets(costStr, sizeof(costStr), stdin);
-        costStr[strcspn(costStr, "\n")] = 0;
-        for (int i = 0; costStr[i]; i++) {
-            if (!isdigit(costStr[i])) {
-                validCost = 0;
+        int found = -1;
+        for (int i = 0; i < count; i++) {
+            char tempID[20];
+            strcpy(tempID, records[i].id);
+            toUpperStr(tempID);
+            if (strcmp(tempID, targetID) == 0) {
+                found = i;
                 break;
             }
         }
-    } while (!validCost);
-    records[found].cost = atoi(costStr);
+        if (found == -1) {
+            printf("❌ ไม่พบ ID นี้ในระบบ\n");
+            return;
+        }
 
-    saveData(records, count, filename);
-    printf("\n✅ อัปเดตข้อมูลเรียบร้อยแล้ว!\n");
-    printTable(records, count, filename);
-    while (1) {
+        printf("\n--- อัปเดตรายการ ID: %s ---\n", records[found].id);
+
+        
+        while (1) {
+            printf("RepairID: ");
+            fgets(records[found].id, sizeof(records[found].id), stdin);
+            records[found].id[strcspn(records[found].id, "\n")] = 0;
+
+            if (!hasLetter(records[found].id)) {
+                printf("❌ ID ต้องมีตัวอักษรอย่างน้อย 1 ตัว\n");
+                continue;
+            }
+            if (!checkID(records[found].id)) {
+                printf("❌ ID นี้ถูกใช้ไปแล้ว โปรดลองใหม่\n");
+                continue;
+            }
+            toUpperStr(records[found].id);
+            break;
+        }
+
+        
+        do {
+            printf("Car Model: ");
+            fgets(records[found].model, sizeof(records[found].model), stdin);
+            records[found].model[strcspn(records[found].model, "\n")] = 0;
+        } while (!hasLetterCount(records[found].model, 2));
+
+        
+        printf("Repair Details: ");
+        fgets(records[found].problem, sizeof(records[found].problem), stdin);
+        records[found].problem[strcspn(records[found].problem, "\n")] = 0;
+
+        
+        char costStr[20];
+        int validCost;
+        do {
+            validCost = 1;
+            printf("Cost: ");
+            fgets(costStr, sizeof(costStr), stdin);
+            costStr[strcspn(costStr, "\n")] = 0;
+            for (int i = 0; costStr[i]; i++)
+                if (!isdigit(costStr[i])) validCost = 0;
+            if (!validCost) printf("❌ กรุณากรอกตัวเลขเท่านั้น\n");
+        } while (!validCost);
+        records[found].cost = atoi(costStr);
+
+        
+        saveData(records, count, filename);
+        printf("\n✅ อัปเดตข้อมูลเรียบร้อยแล้ว!\n");
+        printTable(records, count, filename);
+
+        
+        char choice;
+        while (1) {
             printf("ต้องการอัพเดตต่อหรือไม่?(y/n): ");
             choice = getchar();
-            while (getchar() != '\n'); 
+            while (getchar() != '\n'); // เคลียร์ buffer
 
             if (choice == 'y' || choice == 'Y') {
-                break; 
-            } 
-            else if (choice == 'n' || choice == 'N') {
-                printf("✅ จบการทำงาน\n");
-                return; 
-            } 
-            else {
+                break; // กลับไปอัปเดตรอบใหม่
+            } else if (choice == 'n' || choice == 'N') {
+                continueUpdate = 0; // ออกจากลูปรอบใหญ่
+                printf("✅ กลับสู่เมนูหลัก\n");
+                break;
+            } else {
                 printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
             }
         }
-    }while (1);
-} 
+    }
+}
     
 
 
