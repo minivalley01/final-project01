@@ -160,10 +160,22 @@ void saveData(struct Record records[], int count, const char *filename) {
     }
     fclose(fp);
 }
+void printTable(struct Record records[], int count, const char *filename) {
+    printf("\n--- ข้อมูลทั้งหมดจากไฟล์ %s ---\n", filename);
+    printf("+----------+----------------------+--------------------------+------------+\n");
+    printf("| RepairID | Car Model            | Repair Details           | Cost (฿)   |\n");
+    printf("+----------+----------------------+--------------------------+------------+\n");
+    for (int i = 0; i < count; i++) {
+        printf("| %-8s | %-20s | %-24s | %-10d |\n",
+               records[i].id,
+               records[i].model,
+               records[i].problem,
+               records[i].cost);
+    }
+    printf("+----------+----------------------+--------------------------+------------+\n");
 
 
-
-
+}
 void addRepair() {
     int Expense;
     char ID[10], Car[100], Details[500];
@@ -325,7 +337,54 @@ void updateRecord(const char *filename) {
         printf("ตัวเลือกไม่ถูกต้อง\n");
         return;
     }
+ int index = choice - 1;
 
+    // กรอก ID ใหม่
+    char id[20];
+    do {
+        printf("กรอก ID ใหม่ (อย่างน้อย 1 ตัวอักษร): ");
+        fgets(id, sizeof(id), stdin);
+        id[strcspn(id, "\n")] = 0;
+    } while (!hasLetter(id));
+    toUpperStr(id);
+    strcpy(records[index].id, id);
+
+    // กรอก Model ใหม่
+    char model[50];
+    do {
+        printf("กรอกชื่อรถใหม่ (ต้องมีตัวอักษรอย่างน้อย 2 ตัว): ");
+        fgets(model, sizeof(model), stdin);
+        model[strcspn(model, "\n")] = 0;
+    } while (!hasAtLeastTwoLetters(model));
+    strcpy(records[index].model, model);
+
+    // กรอกปัญหาใหม่
+    printf("กรอกปัญหาใหม่: ");
+    fgets(records[index].problem, sizeof(records[index].problem), stdin);
+    records[index].problem[strcspn(records[index].problem, "\n")] = 0;
+
+    // กรอกค่าใช้จ่ายใหม่ (เฉพาะตัวเลข)
+    char costStr[20];
+    int validCost = 0;
+    do {
+        printf("กรอกค่าใช้จ่ายใหม่ (เฉพาะตัวเลข): ");
+        fgets(costStr, sizeof(costStr), stdin);
+        costStr[strcspn(costStr, "\n")] = 0;
+
+        validCost = 1;
+        for (int i = 0; costStr[i]; i++) {
+            if (!isdigit(costStr[i])) {
+                validCost = 0;
+                break;
+            }
+        }
+    } while (!validCost);
+    records[index].cost = atoi(costStr);
+
+    // บันทึกข้อมูลกลับลงไฟล์
+    saveData(records, count, filename);
+    printf("\n✅ อัปเดตข้อมูลเรียบร้อยแล้ว\n");
+}
 
 
 
@@ -358,7 +417,12 @@ int main() {
                      printf("กำลังกลับไปหน้าเมนู...\n");
                     }
             break; 
-            case 3: updateRepair(); break;
+            case 3: if (confirmAction("คุณต้องการอัพเดตข้อมูลการซ่อมเเซมใช่ไหม")) {
+                        updateRecord();
+                    } else {
+                     printf("กำลังกลับไปหน้าเมนู...\n");
+                    }
+            break; 
             //case 4: deleteRepair(); break;
             //case 5: showRepair(); break;
             case 0:
