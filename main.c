@@ -157,8 +157,8 @@ void saveData(struct Record records[], int count, const char *filename) {
                 records[i].id,
                 records[i].model,
                 records[i].problem,
-                records[i].cost);
-                int status; // 1=active, 0=deleted
+                records[i].cost,
+                records[i].status); // 1=active, 0=deleted
     }
     fclose(fp);
 }
