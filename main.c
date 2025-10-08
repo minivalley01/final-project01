@@ -1,7 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>  
+#include <ctype.h>
+
+
+#define MAX_LINE 256
+#define MAX_RECORDS 100
+
+struct Record {
+    char id[20];
+    char model[50];
+    char problem[100];
+    int cost;
+};
 
 
 
@@ -90,6 +101,11 @@ int checkID(char *ID) { //  เช็คไอดี
     fclose(fp);
     return 1; // ไม่ซ้ำเเละผ่านการตรวจสอบ
 }
+void toUpperStr(char *str) {
+    for (int i = 0; str[i]; i++) {
+        str[i] = toupper((unsigned char)str[i]);
+    }
+}
 void strToLower(char *str) {
     for (int i = 0; str[i]; i++)
         str[i] = tolower(str[i]);
@@ -107,7 +123,43 @@ void trim(char *str) {  // ตัด space/tab ข้างหน้าและ
         len--;
     }
 }
+int loadData(struct Record records[], const char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (!fp) {
+        printf("ไม่พบไฟล์ข้อมูล\n");
+        return 0;
+    }
 
+    int count = 0;
+    char line[MAX_LINE];
+    while (fgets(line, sizeof(line), fp)) {
+        line[strcspn(line, "\n")] = 0;
+        sscanf(line, "%[^,],%[^,],%[^,],%d",
+               records[count].id,
+               records[count].model,
+               records[count].problem,
+               &records[count].cost);
+        count++;
+    }
+    fclose(fp);
+    return count;
+}
+
+void saveData(struct Record records[], int count, const char *filename) {
+    FILE *fp = fopen(filename, "w");
+    if (!fp) {
+        printf("ไม่สามารถบันทึกข้อมูลได้\n");
+        return;
+    }
+    for (int i = 0; i < count; i++) {
+        fprintf(fp, "%s,%s,%s,%d\n",
+                records[i].id,
+                records[i].model,
+                records[i].problem,
+                records[i].cost);
+    }
+    fclose(fp);
+}
 
 
 
@@ -133,6 +185,8 @@ void addRepair() {
                 printf("❌ ID ต้องมีตัวอักษรอย่างน้อย 1 ตัว\n");
                 continue;
             }
+            toUpperStr(ID);
+
             if (checkID(ID)) {
                 break; 
             } else {
@@ -245,7 +299,32 @@ void searchRepair() {
 
     } while (choice == 'y' || choice == 'Y');
 }
+void updateRecord(const char *filename) {
+    struct Record records[MAX_RECORDS];
+    int count = loadData(records, filename);
 
+    if (count == 0) {
+        printf("ไม่มีข้อมูลให้อัปเดต\n");
+        return;
+    }
+
+    // แสดงข้อมูลทั้งหมด
+    printf("\n--- ข้อมูลทั้งหมด ---\n");
+    for (int i = 0; i < count; i++) {
+        printf("%d) ID: %s | Model: %s | Problem: %s | Cost: %d\n",
+               i + 1, records[i].id, records[i].model, records[i].problem, records[i].cost);
+    }
+
+    // เลือกรายการที่จะอัปเดต
+    int choice;
+    printf("\nเลือกรายการที่จะอัปเดต (1 - %d): ", count);
+    scanf("%d", &choice);
+    getchar();
+
+    if (choice < 1 || choice > count) {
+        printf("ตัวเลือกไม่ถูกต้อง\n");
+        return;
+    }
 
 
 
@@ -279,7 +358,7 @@ int main() {
                      printf("กำลังกลับไปหน้าเมนู...\n");
                     }
             break; 
-            //case 3: updateRepair(); break;
+            case 3: updateRepair(); break;
             //case 4: deleteRepair(); break;
             //case 5: showRepair(); break;
             case 0:
