@@ -25,8 +25,13 @@ int confirmAction(const char *message) {
         }
     }
 }
-
-
+int hasLetter(const char *s) {
+    while (*s) {
+        if (isalpha(*s)) return 1;
+        s++;
+    }
+    return 0;
+}
 int getIntegerInput(const char *message) { // ใช้ตรวจสอบว่าเป็นตัวเลขไหม
     char buffer[100];   // เก็บข้อความที่ผู้ใช้พิมพ์
     int isValid = 0;
@@ -57,8 +62,6 @@ int getIntegerInput(const char *message) { // ใช้ตรวจสอบว�
 
     return number;
 }
-
-
 int checkID(char *ID) { //  เช็คไอดี
     FILE *fp = fopen("data.csv", "r");
     if (fp == NULL) return 1; // ถ้าไฟล์ยังไม่มี ให้ผ่านไปเลย
@@ -78,6 +81,26 @@ int checkID(char *ID) { //  เช็คไอดี
     fclose(fp);
     return 1; // ไม่ซ้ำเเละผ่านการตรวจสอบ
 }
+void strToLower(char *str) {
+    for (int i = 0; str[i]; i++)
+        str[i] = tolower(str[i]);
+}
+void trim(char *str) {  // ตัด space/tab ข้างหน้าและข้างหลัง
+    // ตัด space/tab ข้างหน้า
+    char *p = str;
+    while(*p && isspace(*p)) p++;
+    memmove(str, p, strlen(p)+1);
+
+    // ตัด space/tab ข้างหลัง
+    int len = strlen(str);
+    while(len > 0 && isspace(str[len-1])) {
+        str[len-1] = 0;
+        len--;
+    }
+}
+
+
+
 
 
 void addRepair() {
@@ -125,39 +148,6 @@ void addRepair() {
 
     }while (choice == 'y' || choice == 'Y');
 }
-
-   
-
-void strToLower(char *str) {
-    for (int i = 0; str[i]; i++)
-        str[i] = tolower(str[i]);
-}
-
-
-void trim(char *str) {  // ตัด space/tab ข้างหน้าและข้างหลัง
-    // ตัด space/tab ข้างหน้า
-    char *p = str;
-    while(*p && isspace(*p)) p++;
-    memmove(str, p, strlen(p)+1);
-
-    // ตัด space/tab ข้างหลัง
-    int len = strlen(str);
-    while(len > 0 && isspace(str[len-1])) {
-        str[len-1] = 0;
-        len--;
-    }
-}
-
-
-int hasLetter(const char *s) {
-    while (*s) {
-        if (isalpha(*s)) return 1;
-        s++;
-    }
-    return 0;
-}
-
-
 void searchRepair() {
     char keyword[50];
     char choice;
@@ -264,7 +254,7 @@ int main() {
                      printf("กำลังกลับไปหน้าเมนู...\n");
                     }
             break; 
-            //case 3: updateRepair(); break;
+            case 3: updateRepair(); break;
             //case 4: deleteRepair(); break;
             //case 5: showRepair(); break;
             case 0:
