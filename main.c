@@ -119,7 +119,7 @@ void strToLower(char *str) {
 
 void searchRepair() {
     char keyword[50];
-    printf("กรอกคีย์เวิร์ดค้นหา: ");
+    printf("กรอกคีย์เวิร์ดค้นหา(ID/Car): ");
     getchar(); // เคลียร์ buffer
     fgets(keyword, sizeof(keyword), stdin);
     keyword[strcspn(keyword, "\n")] = 0; // ตัด \n
