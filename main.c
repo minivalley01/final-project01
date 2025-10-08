@@ -25,6 +25,15 @@ int confirmAction(const char *message) {
         }
     }
 }
+int hasLetterCount(const char *str, int minLetters) {
+    int count = 0;
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (isalpha((unsigned char)str[i])) {
+            count++;
+        }
+    }
+    return count >= minLetters;
+}
 int hasLetter(const char *s) {
     while (*s) {
         if (isalpha(*s)) return 1;
@@ -119,7 +128,7 @@ void addRepair() {
         while (1) {
             printf("\nRepairID: "); 
             scanf("%s", ID);
-            int c; while ((c = getchar()) != '\n' && c != EOF); // เคลียร์ buffer
+            int c; while ((c = getchar()) != '\n' && c != EOF); 
             if (!hasLetter(ID)) {
                 printf("❌ ID ต้องมีตัวอักษรอย่างน้อย 1 ตัว\n");
                 continue;
@@ -130,15 +139,31 @@ void addRepair() {
                 printf("Please try again\n");
             }
         }
-        printf("\nCar model: "); 
-        fgets(Car, sizeof(Car), stdin);
-        Car[strcspn(Car, "\n")] = 0; // ตัด \n
-        printf("\nRepair details: ");  
+        while (1) {
+            printf("\nCar model: ");
+            fgets(Car, sizeof(Car), stdin);
+            Car[strcspn(Car, "\n")] = 0;
+            if (!hasLetterCount(Car, 2)) {
+                printf("❌ Car model ต้องมีอย่างน้อย 2 ตัวอักษร\n");
+                continue;
+            }
+            break;
+        }
+        printf("\nRepair details {ใช้ |(vertical bar) ขั้นหากมีหลายกรณี}: ");  
         fgets(Details, sizeof(Details), stdin);
         Details[strcspn(Details, "\n")] = 0;
-        printf("\nCost: "); 
-        scanf("%d", &Expense);
-        int c; while ((c = getchar()) != '\n' && c != EOF); // เคลียร์ buffer
+        while (1) {
+            printf("\nCost: ");
+            if (scanf("%d", &Expense) == 1) {
+                if (Expense >= 0) break;
+                else printf("❌ กรุณากรอกจำนวนที่มากกว่าหรือเท่ากับ 0\n");
+            } else {
+                printf("❌ กรุณากรอกตัวเลขเท่านั้น!\n");
+                int c;
+                while ((c = getchar()) != '\n' && c != EOF);
+            }
+        }
+        int c; while ((c = getchar()) != '\n' && c != EOF);
         fprintf(ADD, "%s,%s,%s,%d\n", ID, Car, Details, Expense);
         fclose(ADD);
         printf("✅ SUCCESS\n");
@@ -254,7 +279,7 @@ int main() {
                      printf("กำลังกลับไปหน้าเมนู...\n");
                     }
             break; 
-            case 3: updateRepair(); break;
+            //case 3: updateRepair(); break;
             //case 4: deleteRepair(); break;
             //case 5: showRepair(); break;
             case 0:
