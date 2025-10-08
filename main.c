@@ -59,8 +59,6 @@ int getIntegerInput(const char *message) { // ใช้ตรวจสอบว�
 }
 
 
-
-
 int checkID(char *ID) { //  เช็คไอดี
     FILE *fp = fopen("data.csv", "r");
     if (fp == NULL) return 1; // ถ้าไฟล์ยังไม่มี ให้ผ่านไปเลย
@@ -112,7 +110,70 @@ void addRepair() {
     fclose(ADD);
     printf("SUCCESS\n");
 }
-    
+   
+
+void strToLower(char *str) {
+    for (int i = 0; str[i]; i++)
+        str[i] = tolower(str[i]);
+}
+
+void searchRepair() {
+    char keyword[50];
+    printf("กรอกคีย์เวิร์ดค้นหา: ");
+    getchar(); // เคลียร์ buffer
+    fgets(keyword, sizeof(keyword), stdin);
+    keyword[strcspn(keyword, "\n")] = 0; // ตัด \n
+    strToLower(keyword);
+
+    FILE *fp = fopen("data.csv", "r");
+    if (fp == NULL) {
+        printf("❌ ไม่พบไฟล์ข้อมูล\n");
+        return;
+    }
+
+    char line[200];
+    int found = 0;
+
+    // ANSI สีสำหรับแต่ละคอลัมน์
+    const char *BLUE   = "\033[1;34m";
+    const char *GREEN  = "\033[1;32m";
+    const char *YELLOW = "\033[1;33m";
+    const char *RED    = "\033[1;31m";
+    const char *CYAN   = "\033[1;36m";
+    const char *RESET  = "\033[0m";
+
+    // พิมพ์หัวตาราง
+    printf("%s| %-6s |%s %-10s |%s %-10s |%s %-15s |%s %-6s |%s\n",
+           BLUE, "ID", GREEN, "Brand", YELLOW, "Model", RED, "Problem", CYAN, "Cost", RESET);
+    printf("-------------------------------------------------------------\n");
+
+    while (fgets(line, sizeof(line), fp)) {
+        char ID[10], Brand[20], Model[20], Problem[50];
+        int Cost;
+
+        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%d", ID, Brand, Model, Problem, &Cost);
+
+        // แปลงเป็นพิมพ์เล็กสำหรับตรวจสอบ keyword
+        char ID_l[10], Brand_l[20], Model_l[20], Problem_l[50];
+        strcpy(ID_l, ID); strToLower(ID_l);
+        strcpy(Brand_l, Brand); strToLower(Brand_l);
+        strcpy(Model_l, Model); strToLower(Model_l);
+        strcpy(Problem_l, Problem); strToLower(Problem_l);
+
+        if (strstr(ID_l, keyword) != NULL || strstr(Brand_l, keyword) != NULL ||
+            strstr(Model_l, keyword) != NULL || strstr(Problem_l, keyword) != NULL) {
+            printf("%s| %-6s |%s %-10s |%s %-10s |%s %-15s |%s %-6d |%s\n",
+                   BLUE, ID, GREEN, Brand, YELLOW, Model, RED, Problem, CYAN, Cost, RESET);
+            found = 1;
+        }
+    }
+
+    if (!found) {
+        printf("❌ ไม่พบข้อมูลที่ตรงกับ \"%s\"\n", keyword);
+    }
+
+    fclose(fp);
+}
 
 
 
@@ -139,7 +200,7 @@ int main() {
                      printf("กำลังกลับไปหน้าเมนู\n");
                     }
             break; 
-            //case 2: searchRepair(); break;
+            case 2: searchRepair(); break;
             //case 3: updateRepair(); break;
             //case 4: deleteRepair(); break;
             //case 5: showRepair(); break;
