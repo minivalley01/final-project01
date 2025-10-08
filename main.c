@@ -239,7 +239,7 @@ void addRepair() {
         printf("✅ SUCCESS\n");
         printf("ต้องการเพิ่มข้อมูลอีกหรือไม่?(y/n): ");
         choice = getchar();
-        while ((c = getchar()) != '\n' && c != EOF); // เคลียร์ buffer
+        while ((c = getchar()) != '\n' && c != EOF); 
 
     }while (choice == 'y' || choice == 'Y');
 }
@@ -358,8 +358,8 @@ void updateRecord(const char *filename) {
         printf("RepairID: ");
         fgets(records[found].id, sizeof(records[found].id), stdin);
         records[found].id[strcspn(records[found].id, "\n")] = 0;
-    } while (!hasLetter(records[found].id));
-     if (checkID(records[found].id)) {
+    } while (!hasLetter(records[found].id)&&(checkID(records[found].id)));
+        if (checkID(records[found].id)) {
                 break; 
             } else {
                 printf("Please try again\n");
@@ -401,7 +401,7 @@ void updateRecord(const char *filename) {
     printTable(records, count, filename);
     printf("ต้องการเพิ่มข้อมูลอีกหรือไม่? (y/n): ");
         choice = getchar();
-        while ((c = getchar()) != '\n' && c != EOF); // เคลียร์ buffer
+        while ((c = getchar()) != '\n' && c != EOF);
     } while (choice == 'y' || choice == 'Y');
 }
 
