@@ -120,7 +120,7 @@ void addRepair() {
 
 
 int main() {
-    int choice;
+    
 
     while(1) {
         printf("\n==== ระบบจัดการข้อมูลการซ่อมแซมรถยนต์ ====\n");
@@ -130,11 +130,15 @@ int main() {
         printf("4) ลบข้อมูลการซ่อมแซม\n");
         printf("5) แสดงข้อมูลการซ่อมแซมทั้งหมด\n");
         printf("0) ออกจากโปรแกรม\n");
-        printf("กรุณาเลือกเมนู: ");
-        scanf("%d", &choice);
+        int choice = getIntegerInput("กรุณาเลือกเมนูที่ต้องการ : ");
 
         switch (choice) {
-            case 1: addRepair(); break;
+            case 1:  case 1: if (confirmAction("คุณต้องการเพิ่มข้อมูลการซ่อมเเซมใช่ไหม")) {
+                        addRepair();
+                    } else {
+                     break;
+                    }
+            break; 
             //case 2: searchRepair(); break;
             //case 3: updateRepair(); break;
             //case 4: deleteRepair(); break;
