@@ -1,6 +1,63 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>  
+
+
+
+
+
+int confirmAction(const char *message) {
+    char choice;
+
+    while (1) {
+        printf("%s (y/n): ", message);
+        scanf(" %c", &choice);  // มีช่องว่างหน้า %c เพื่อข้ามช่องว่างหรือ \n
+
+        choice = tolower(choice);  // แปลงเป็นตัวพิมพ์เล็กให้เทียบง่าย
+
+        if (choice == 'y') {
+            return 1;  // ยืนยัน
+        } else if (choice == 'n') {
+            return 0;  // ยกเลิก
+        } else {
+            printf("⚠️  กรุณากรอกแค่ y หรือ n เท่านั้น\n");
+        }
+    }
+}
+
+
+int getIntegerInput(const char *message) { // ใช้ตรวจสอบว่าเป็นตัวเลขไหม
+    char buffer[100];   // เก็บข้อความที่ผู้ใช้พิมพ์
+    int isValid = 0;
+    int number;
+
+    while (!isValid) {
+        printf("%s", message);
+        fgets(buffer, sizeof(buffer), stdin);
+
+        // ลบ \n ออกจาก buffer
+        buffer[strcspn(buffer, "\n")] = 0;
+
+        // ตรวจสอบว่าเป็นตัวเลขล้วนไหม
+        isValid = 1;  // สมมติว่า valid
+        for (int i = 0; i < strlen(buffer); i++) {
+            if (!isdigit(buffer[i])) {  // ถ้ามีตัวที่ไม่ใช่ตัวเลข
+                isValid = 0;
+                break;
+            }
+        }
+
+        if (isValid) {
+            sscanf(buffer, "%d", &number);  // แปลงสตริงเป็น int
+        } else {
+            printf("⚠️ เมนูไม่ถูกต้อง กรุณาเลือกอีกครั้ง!\n");
+        }
+    }
+
+    return number;
+}
+
 
 
 
