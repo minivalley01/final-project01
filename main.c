@@ -82,41 +82,46 @@ int checkID(char *ID) { //  เช็คไอดี
 
 void addRepair() {
     int Expense;
-    char ID[10],Car[70],Details[200];
+    char ID[10], Car[70], Details[200];
     char choice;
+
     do {
-        printf("\n1) ระบบเพิ่มข้อมูลการซ่อมเเซมใหม่");
-        FILE *ADD = fopen("data.csv","a"); 
+        printf("\n1) ระบบเพิ่มข้อมูลการซ่อมเเซมใหม่\n");
+
+        FILE *ADD = fopen("data.csv", "a"); 
         if (ADD == NULL) {
-        printf("ERROR\n");
-        return ;
-    }
-    while (1) {
-    printf("\nRepairID; "); scanf("%s",ID);
-    if (checkID(ID)) {
-    break; // ออกจากลูป ID ถูกแล้ว
-    } else {
-            printf("Please try agin\n");
-    }
-    }
-    printf("\nCar model: ");
-    getchar(); // เคลียร์ buffer ก่อนหน้า
-    fgets(Car, sizeof(Car), stdin);
-    Car[strcspn(Car, "\n")] = 0; //เอา \n ออก
-    printf("\nRepair details; ");  
-    fgets(Details, sizeof(Details), stdin);
-    Details[strcspn(Details, "\n")] = 0;
-    printf("\nCost; "); scanf("%d", &Expense);
-    fprintf(ADD, "%s,%s,%s,%d\n", ID,Car,Details,Expense);
-        
-    fclose(ADD);
-    printf("SUCCESS\n");
-    printf("ต้องการเพิ่มข้อมูลอีกหรือไม่?(y/n): ");
+            printf("ERROR เปิดไฟล์ไม่สำเร็จ\n");
+            return;
+        }
+        while (1) {
+            printf("\nRepairID: "); 
+            scanf("%s", ID);
+            int c; while ((c = getchar()) != '\n' && c != EOF); // เคลียร์ buffer
+            if (checkID(ID)) {
+                break; 
+            } else {
+                printf("Please try again\n");
+            }
+        }
+        printf("\nCar model: "); 
+        fgets(Car, sizeof(Car), stdin);
+        Car[strcspn(Car, "\n")] = 0; // ตัด \n
+        printf("\nRepair details: ");  
+        fgets(Details, sizeof(Details), stdin);
+        Details[strcspn(Details, "\n")] = 0;
+        printf("\nCost: "); 
+        scanf("%d", &Expense);
+        int c; while ((c = getchar()) != '\n' && c != EOF); // เคลียร์ buffer
+        fprintf(ADD, "%s,%s,%s,%d\n", ID, Car, Details, Expense);
+        fclose(ADD);
+        printf("✅ SUCCESS\n");
+        printf("ต้องการเพิ่มข้อมูลอีกหรือไม่?(y/n): ");
         choice = getchar();
-        while (getchar() != '\n'); // เคลียร์ buffer
+        while ((c = getchar()) != '\n' && c != EOF); // เคลียร์ buffer
 
     } while (choice == 'y' || choice == 'Y');
 }
+
    
 
 void strToLower(char *str) {
