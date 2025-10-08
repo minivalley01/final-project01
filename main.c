@@ -83,19 +83,21 @@ int checkID(char *ID) { //  เช็คไอดี
 void addRepair() {
     int Expense;
     char ID[10],Car[70],Details[200];
-    printf("\n1) ระบบเพิ่มข้อมูลการซ่อมเเซมใหม่");
-    FILE *ADD = fopen("data.csv","a"); 
-    if (ADD == NULL) {
+    char choice;
+    do {
+        printf("\n1) ระบบเพิ่มข้อมูลการซ่อมเเซมใหม่");
+        FILE *ADD = fopen("data.csv","a"); 
+        if (ADD == NULL) {
         printf("ERROR\n");
         return ;
     }
     while (1) {
-      printf("\nRepairID; "); scanf("%s",ID);
-      if (checkID(ID)) {
-        break; // ออกจากลูป ID ถูกแล้ว
-        } else {
+    printf("\nRepairID; "); scanf("%s",ID);
+    if (checkID(ID)) {
+    break; // ออกจากลูป ID ถูกแล้ว
+    } else {
             printf("Please try agin\n");
-        }
+    }
     }
     printf("\nCar model: ");
     getchar(); // เคลียร์ buffer ก่อนหน้า
@@ -106,9 +108,14 @@ void addRepair() {
     Details[strcspn(Details, "\n")] = 0;
     printf("\nCost; "); scanf("%d", &Expense);
     fprintf(ADD, "%s,%s,%s,%d\n", ID,Car,Details,Expense);
-    
+        
     fclose(ADD);
     printf("SUCCESS\n");
+    printf("ต้องการเพิ่มข้อมูลอีกหรือไม่?(y/n): ");
+        choice = getchar();
+        while (getchar() != '\n'); // เคลียร์ buffer
+
+    } while (choice == 'y' || choice == 'Y');
 }
    
 
@@ -209,8 +216,8 @@ void searchRepair() {
 
     fclose(fp);
     printf("ต้องการค้นหาต่อหรือไม่?(y/n): ");
-        choice = getchar();
-        while (getchar() != '\n'); // เคลียร์ buffer
+    choice = getchar();
+    while (getchar() != '\n'); // เคลียร์ buffer
 
     } while (choice == 'y' || choice == 'Y');
 }
