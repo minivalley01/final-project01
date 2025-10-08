@@ -496,7 +496,7 @@ void updateRepair(const char *filename) {
             }
         }
 
-        // ถามว่าต้องการลบต่อหรือกลับเมนูหลัก
+        
         do {
             printf("\nต้องการลบข้อมูลต่อหรือไม่?(y/n): ");
             choice = getchar();
@@ -554,7 +554,10 @@ int main() {
                      printf("กำลังกลับไปหน้าเมนู...\n");
                     }
             break;
-            //case 5: showRepair(); break;
+            case 5: struct Record records[MAX_RECORDS];
+                int count = loadData(records,"data.csv");
+                printTable(records,count,"data.csv");
+            break;
             case 0:
                printf("ออกจากโปรแกรมแล้ว ขอบคุณที่ใช้งาน!\n");
                 exit(0);
