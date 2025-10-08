@@ -448,7 +448,7 @@ void updateRepair(const char *filename) {
         }
     }
 }
- void deleteRecord(const char *filename) {
+ void deleteRepair(const char *filename) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
     if (count == 0) {
