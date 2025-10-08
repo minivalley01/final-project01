@@ -162,9 +162,6 @@ void saveData(struct Record records[], int count, const char *filename) {
     }
     fclose(fp);
 }
-//int isPrintable(int status) {
-   // return status == 1; // 1 = แสดงได้, 0 = ถูกลบ
-//}
 void printTable(struct Record records[], int count, const char *filename) {
     printf("\n--- ข้อมูลทั้งหมดจากไฟล์ %s ---\n", filename);
     printf("+----------+----------------------+--------------------------+------------+\n");
@@ -379,7 +376,14 @@ void updateRepair(const char *filename) {
         }
         if (found == -1) {
             printf("❌ ไม่พบ ID นี้ในระบบ\n");
-            return;
+            printf("ต้องการลองกรอกอีกครั้งหรือไม่? (y/n): ");
+            char choice = getchar();
+            while (getchar() != '\n'); 
+
+            if (choice == 'n' || choice == 'N') {
+            continueUpdate = 0; 
+            }
+            continue; 
         }
 
         printf("\n--- อัปเดตรายการ ID: %s ---\n", records[found].id);
@@ -394,10 +398,7 @@ void updateRepair(const char *filename) {
                 printf("❌ ID ต้องมีตัวอักษรอย่างน้อย 1 ตัว\n");
                 continue;
             }
-            if (!checkID(records[found].id)) {
-                printf("❌ ID นี้ถูกใช้ไปแล้ว โปรดลองใหม่\n");
-                continue;
-            }
+            
             toUpperStr(records[found].id);
             break;
         }
@@ -462,7 +463,7 @@ void updateRepair(const char *filename) {
 
     char choice;
     do {
-        printTable(records, count, filename); // แสดงข้อมูลทั้งหมดที่ active
+        printTable(records, count, filename); 
 
         char targetID[20];
         printf("\nกรอก RepairID ที่ต้องการลบ: ");
@@ -486,13 +487,13 @@ void updateRepair(const char *filename) {
         } else if (records[found].status == 0) {
             printf("❌ ข้อมูลนี้ถูกลบไปแล้ว\n");
         } else {
-            // ยืนยันการลบ
+            
             printf("⚠️ คุณต้องการลบข้อมูล ID: %s ใช่หรือไม่? (y/n): ", records[found].id);
             choice = getchar();
-            int c; while ((c = getchar()) != '\n' && c != EOF); // เคลียร์ buffer
+            int c; while ((c = getchar()) != '\n' && c != EOF); 
 
             if (choice == 'y' || choice == 'Y') {
-                records[found].status = 0; // soft delete
+                records[found].status = 0; 
                 saveData(records, count, filename);
                 printf("✅ ลบข้อมูลเรียบร้อยแล้ว\n");
             } else {
