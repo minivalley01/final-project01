@@ -142,10 +142,6 @@ void searchRepair() {
     const char *CYAN   = "\033[1;36m";
     const char *RESET  = "\033[0m";
 
-    // พิมพ์หัวตาราง
-    printf("%s| %-6s |%s %-10s |%s %-10s |%s %-15s |%s %-6s |%s\n",
-           BLUE, "ID", GREEN, "Brand", YELLOW, "Model", RED, "Problem", CYAN, "Cost", RESET);
-    printf("-------------------------------------------------------------\n");
 
     while (fgets(line, sizeof(line), fp)) {
         char ID[10], Brand[20], Model[20], Problem[50];
