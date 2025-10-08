@@ -97,6 +97,10 @@ void addRepair() {
             printf("\nRepairID: "); 
             scanf("%s", ID);
             int c; while ((c = getchar()) != '\n' && c != EOF); // เคลียร์ buffer
+            if (!hasLetter(ID)) {
+                printf("❌ ID ต้องมีตัวอักษรอย่างน้อย 1 ตัว\n");
+                continue;
+            }
             if (checkID(ID)) {
                 break; 
             } else {
@@ -119,7 +123,7 @@ void addRepair() {
         choice = getchar();
         while ((c = getchar()) != '\n' && c != EOF); // เคลียร์ buffer
 
-    } while (choice == 'y' || choice == 'Y');
+    }while (choice == 'y' || choice == 'Y');
 }
 
    
@@ -161,7 +165,6 @@ void searchRepair() {
         printf("\n1) ระบบค้นหาข้อมูลการซ่อมเเซม\n");
         while (1) {
         printf("กรอกคีย์เวิร์ดค้นหา(ID/Car) อย่างน้อย 2 ตัว: ");
-        
         fgets(keyword, sizeof(keyword), stdin);
         keyword[strcspn(keyword, "\n")] = 0; // ตัด \n
 
