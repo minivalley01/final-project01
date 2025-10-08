@@ -117,6 +117,22 @@ void strToLower(char *str) {
         str[i] = tolower(str[i]);
 }
 
+
+void trim(char *str) {  // ตัด space/tab ข้างหน้าและข้างหลัง
+    // ตัด space/tab ข้างหน้า
+    char *p = str;
+    while(*p && isspace(*p)) p++;
+    memmove(str, p, strlen(p)+1);
+
+    // ตัด space/tab ข้างหลัง
+    int len = strlen(str);
+    while(len > 0 && isspace(str[len-1])) {
+        str[len-1] = 0;
+        len--;
+    }
+}
+
+
 void searchRepair() {
     char keyword[50];
     printf("กรอกคีย์เวิร์ดค้นหา(ID/Car): ");
@@ -155,13 +171,16 @@ void searchRepair() {
         if (sscanf(line, "%[^,],%[^,],%[^,],%d", ID, Model, Problem, &Cost) != 4)
             continue;
 
+        trim(ID);
+        trim(Model);
+        trim(Problem);
+
         char ID_l[10], Model_l[50], Problem_l[200];
         strcpy(ID_l, ID); strToLower(ID_l);
         strcpy(Model_l, Model); strToLower(Model_l);
-        strcpy(Problem_l, Problem); strToLower(Problem_l);
 
-        if (strstr(ID_l, keyword) != NULL || strstr(Model_l, keyword) != NULL || strstr(Problem_l, keyword) != NULL) {
-            printf("%s| %-10s |%s %-17s |%s %-22s |%s %-10d |%s\n",
+        if (strstr(ID_l, keyword) != NULL || strstr(Model_l, keyword) != NULL) {
+            printf("%s| %-6s |%s %-15s |%s %-20s |%s %-8d |%s\n",
                    BLUE, ID, YELLOW, Model, RED, Problem, CYAN, Cost, RESET);
             found = 1;
         }
