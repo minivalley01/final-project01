@@ -246,90 +246,97 @@ void addRepair() {
 void searchRepair() {
     char keyword[50];
     char choice;
-    do {
+
+    do { 
         printf("\n1) ระบบค้นหาข้อมูลการซ่อมเเซม\n");
+
+        
         while (1) {
-        printf("กรอกคีย์เวิร์ดค้นหา(ID/Car) อย่างน้อย 2 ตัว: ");
-        fgets(keyword, sizeof(keyword), stdin);
-        keyword[strcspn(keyword, "\n")] = 0; // ตัด \n
+            printf("กรอกคีย์เวิร์ดค้นหา(ID/Car): ");
+            fgets(keyword, sizeof(keyword), stdin);
+            keyword[strcspn(keyword, "\n")] = 0; 
 
-        if (strlen(keyword) >= 2) break;  // ผ่านเงื่อนไข
-        printf("❌ ต้องกรอกอย่างน้อย 2 ตัวอักษร!\n");
-    }
-
-    strToLower(keyword);
-
-    FILE *fp = fopen("data.csv", "r");
-    if (fp == NULL) {
-        printf("❌ ไม่พบไฟล์ข้อมูล\n");
-        return;
-    }
-
-    char line[512];
-    int found = 0;
-
-    // ANSI สี
-    const char *BLUE   = "\033[1;34m";
-    const char *YELLOW = "\033[1;33m";
-    const char *RED    = "\033[1;31m";
-    const char *CYAN   = "\033[1;36m";
-    const char *RESET  = "\033[0m";
-
-    // พิมพ์หัวตาราง **ครั้งเดียว**
-    printf("%s| %-6s |%s %-15s |%s %-20s |%s %-8s |%s\n",
-           BLUE, "RepairID", YELLOW, "Carmodel", RED, "Repairdetails", CYAN, "Cost(Bath)", RESET);
-    printf("---------------------------------------------------------------\n");
-
-    while (fgets(line, sizeof(line), fp)) {
-        char ID[10], Model[50], Problem[200];
-        int Cost;
-
-        line[strcspn(line, "\n")] = 0; // ตัด \n
-
-        if (sscanf(line, "%[^,],%[^,],%[^,],%d", ID, Model, Problem, &Cost) != 4)
-            continue;
-
-        trim(ID);
-        trim(Model);
-        trim(Problem);
-
-        char ID_l[10], Model_l[50], Problem_l[200];
-        strcpy(ID_l, ID); strToLower(ID_l);
-        strcpy(Model_l, Model); strToLower(Model_l);
-
-        if ((hasLetter(ID_l) && strstr(ID_l, keyword) != NULL) || strstr(Model_l, keyword) != NULL) {
-            printf("%s| %-6s |%s %-15s |%s %-20s |%s %-8d |%s\n",
-                   BLUE, ID, YELLOW, Model, RED, Problem, CYAN, Cost, RESET);
-            found = 1;
+            if (strlen(keyword) >= 2) break;
+            printf("❌ ต้องกรอกอย่างน้อย 2 ตัวอักษร!\n");
         }
-    }
 
-    if (!found) {
-        printf("❌ ไม่พบข้อมูลที่ตรงกับ \"%s\"\n", keyword);
-    }
+        strToLower(keyword);
 
-    fclose(fp);
-    do {
-    printf("ต้องการค้นหาต่อหรือไม่?(y/n): ");
-    choice = getchar();
-    while (getchar() != '\n');
+        FILE *fp = fopen("data.csv", "r");
+        if (fp == NULL) {
+            printf("❌ ไม่พบไฟล์ข้อมูล\n");
+            return;
+        }
 
-    if (choice == 'y' || choice == 'Y') {
-        // 🟡 ถ้ากรอก y → ทำงานค้นหาต่อ
-        printf("🔎 ทำการค้นหาต่อ...\n");
+        char line[512];
+        int found = 0;
 
-    } else if (choice == 'n' || choice == 'N') {
-        // 🟢 ถ้ากรอก n → ออกจากลูป
-        printf("✅ จบการทำงาน\n");
-        break;
+        
+        const char *BLUE   = "\033[1;34m";
+        const char *YELLOW = "\033[1;33m";
+        const char *RED    = "\033[1;31m";
+        const char *CYAN   = "\033[1;36m";
+        const char *RESET  = "\033[0m";
 
-    } else {
-        // 🔴 ถ้ากรอกนอกเหนือ y/n → แจ้งเตือนและวนกลับไปถามใหม่
-        printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
-    }
- } while (1);
-  }
+        
+        printf("%s| %-6s |%s %-15s |%s %-20s |%s %-8s |%s\n",
+               BLUE, "RepairID", YELLOW, "Carmodel", RED, "Repairdetails", CYAN, "Cost(Bath)", RESET);
+        printf("-----------------------------------------------------------------\n");
+
+        
+        while (fgets(line, sizeof(line), fp)) {
+            char ID[10], Model[50], Problem[200];
+            int Cost;
+
+            line[strcspn(line, "\n")] = 0;
+
+            if (sscanf(line, "%[^,],%[^,],%[^,],%d", ID, Model, Problem, &Cost) != 4)
+                continue;
+
+            trim(ID);
+            trim(Model);
+            trim(Problem);
+
+            char ID_l[10], Model_l[50];
+            strcpy(ID_l, ID); strToLower(ID_l);
+            strcpy(Model_l, Model); strToLower(Model_l);
+
+            if ((hasLetter(ID_l) && strstr(ID_l, keyword) != NULL) ||
+                strstr(Model_l, keyword) != NULL) {
+
+                printf("%s| %-6s |%s %-15s |%s %-20s |%s %-8d |%s\n",
+                       BLUE, ID, YELLOW, Model, RED, Problem, CYAN, Cost, RESET);
+                found = 1;
+            }
+        }
+
+        if (!found) {
+            printf("❌ ไม่พบข้อมูลที่ตรงกับ \"%s\"\n", keyword);
+        }
+
+        fclose(fp);
+
+        
+        while (1) {
+            printf("ต้องการค้นหาต่อหรือไม่?(y/n): ");
+            choice = getchar();
+            while (getchar() != '\n'); 
+
+            if (choice == 'y' || choice == 'Y') {
+                break; 
+            } 
+            else if (choice == 'n' || choice == 'N') {
+                printf("✅ จบการทำงาน\n");
+                return; 
+            } 
+            else {
+                printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
+            }
+        }
+
+    } while (1);
 }
+
 void updateRecord(const char *filename) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
@@ -344,7 +351,7 @@ void updateRecord(const char *filename) {
     printTable(records, count, filename);
     
 
-    // เลือกรายการที่จะอัปเดต
+    
     char targetID[20];
     printf("\nกรอก RepairID ที่ต้องการอัปเดต: ");
     fgets(targetID, sizeof(targetID), stdin);
