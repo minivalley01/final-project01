@@ -353,7 +353,7 @@ void updateRecord(const char *filename) {
     }
 
     printf("\n--- อัปเดตรายการ ID: %s ---\n", records[found].id);
-    // กรอก ID ใหม่
+    
     do {
         printf("RepairID: ");
         fgets(records[found].id, sizeof(records[found].id), stdin);
@@ -366,20 +366,20 @@ void updateRecord(const char *filename) {
             }
     toUpperStr(records[found].id);
 
-    // อัปเดต Model
+   
     do {
         printf("Car Model: ");
         fgets(records[found].model, sizeof(records[found].model), stdin);
         records[found].model[strcspn(records[found].model, "\n")] = 0;
     } while (!hasLetterCount(records[found].model,2));
 
-    // อัปเดต Problem
+    
     printf("Repair Details : ");
     fgets(records[found].problem, sizeof(records[found].problem), stdin);
     records[found].problem[strcspn(records[found].problem, "\n")] = 0;
     
 
-    // อัปเดต Cost (เฉพาะตัวเลข)
+    //(เฉพาะตัวเลข)
     char costStr[20];
     int validCost;
     do {
