@@ -83,7 +83,7 @@ int getIntegerInput(const char *message) { // ใช้ตรวจสอบว�
 
     return number;
 }
-int checkID(char *ID) { //  เช็คไอดี
+int checkID(char *ID) { 
     FILE *fp = fopen("data.csv", "r");
     if (fp == NULL) return 1; // ถ้าไฟล์ยังไม่มี ให้ผ่านไปเลย
     if (strlen(ID) > 4 || strlen(ID) < 4) { //เช็คจำนวนตัวอักษร
@@ -345,8 +345,7 @@ void searchRepair() {
 
     } while (1);
 }
-
-void updateRecord(const char *filename) {
+void updateRepair(const char *filename) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
     if (count == 0) {
@@ -449,7 +448,68 @@ void updateRecord(const char *filename) {
         }
     }
 }
-    
+ void deleteRecord(const char *filename) {
+    struct Record records[MAX_RECORDS];
+    int count = loadData(records, filename);
+    if (count == 0) {
+        printf("❌ ไม่มีข้อมูลให้ลบ\n");
+        return;
+    }
+
+    char choice;
+    do {
+        printTable(records, count, filename); // แสดงข้อมูลทั้งหมดที่ active
+
+        char targetID[20];
+        printf("\nกรอก RepairID ที่ต้องการลบ: ");
+        fgets(targetID, sizeof(targetID), stdin);
+        targetID[strcspn(targetID, "\n")] = 0;
+        toUpperStr(targetID);
+
+        int found = -1;
+        for (int i = 0; i < count; i++) {
+            char tempID[20];
+            strcpy(tempID, records[i].id);
+            toUpperStr(tempID);
+            if (strcmp(tempID, targetID) == 0) {
+                found = i;
+                break;
+            }
+        }
+
+        if (found == -1) {
+            printf("❌ ไม่พบ ID นี้ในระบบ\n");
+        } else if (records[found].status == 0) {
+            printf("❌ ข้อมูลนี้ถูกลบไปแล้ว\n");
+        } else {
+            // ยืนยันการลบ
+            printf("⚠️ คุณต้องการลบข้อมูล ID: %s ใช่หรือไม่? (y/n): ", records[found].id);
+            choice = getchar();
+            int c; while ((c = getchar()) != '\n' && c != EOF); // เคลียร์ buffer
+
+            if (choice == 'y' || choice == 'Y') {
+                records[found].status = 0; // soft delete
+                saveData(records, count, filename);
+                printf("✅ ลบข้อมูลเรียบร้อยแล้ว\n");
+            } else {
+                printf("❌ ยกเลิกการลบ\n");
+            }
+        }
+
+        // ถามว่าต้องการลบต่อหรือกลับเมนูหลัก
+        do {
+            printf("\nต้องการลบข้อมูลต่อหรือไม่?(y/n): ");
+            choice = getchar();
+            int c;while ((c = getchar()) != '\n' && c != EOF);
+
+            if (choice == 'y' || choice == 'Y')break; 
+            else if (choice == 'n' || choice == 'N') return; 
+            else printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
+        } while (1);
+
+    } while (1);
+}
+
 
 
 
@@ -483,12 +543,17 @@ int main() {
                     }
             break; 
             case 3: if (confirmAction("คุณต้องการอัพเดตข้อมูลการซ่อมเเซมใช่ไหม")) {
-                        updateRecord("data.csv");    
+                        updateRepair("data.csv");    
                     } else {
                      printf("กำลังกลับไปหน้าเมนู...\n");
                     }
             break; 
-            case 4: deleteRepair(); break;
+            case 4: if (confirmAction("คุณต้องการลบข้อมูลการซ่อมเเซมใช่ไหม")) {
+                        deleteRepair("data.csv");    
+                    } else {
+                     printf("กำลังกลับไปหน้าเมนู...\n");
+                    }
+            break;
             //case 5: showRepair(); break;
             case 0:
                printf("ออกจากโปรแกรมแล้ว ขอบคุณที่ใช้งาน!\n");
