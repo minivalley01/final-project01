@@ -139,7 +139,7 @@ int loadData(struct Record records[], const char *filename) {
                records[count].id,
                records[count].model,
                records[count].problem,
-               &records[count].cost);
+               &records[count].cost,
                &records[count].status);
         count++;
     }
@@ -162,22 +162,28 @@ void saveData(struct Record records[], int count, const char *filename) {
     }
     fclose(fp);
 }
+int isPrintable(int status) {
+    return status == 1; // 1 = แสดงได้, 0 = ถูกลบ
+}
 void printTable(struct Record records[], int count, const char *filename) {
     printf("\n--- ข้อมูลทั้งหมดจากไฟล์ %s ---\n", filename);
     printf("+----------+----------------------+--------------------------+------------+\n");
     printf("| RepairID | Car Model            | Repair Details           | Cost (฿)   |\n");
     printf("+----------+----------------------+--------------------------+------------+\n");
     for (int i = 0; i < count; i++) {
+        if (isPrintable(records[i].status)) {
         printf("| %-8s | %-20s | %-24s | %-10d |\n",
                records[i].id,
                records[i].model,
                records[i].problem,
                records[i].cost);
+        }
     }
     printf("+----------+----------------------+--------------------------+------------+\n");
 
 
 }
+
 
 
 
