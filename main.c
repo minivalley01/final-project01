@@ -82,7 +82,7 @@ int checkID(char *ID) { //  เช็คไอดี
 
 void addRepair() {
     int Expense;
-    char ID[10], Car[70], Details[200];
+    char ID[10], Car[100], Details[500];
     char choice;
 
     do {
@@ -158,6 +158,7 @@ void searchRepair() {
     char keyword[50];
     char choice;
     do {
+        printf("\n1) ระบบค้นหาข้อมูลการซ่อมเเซม\n");
         while (1) {
         printf("กรอกคีย์เวิร์ดค้นหา(ID/Car) อย่างน้อย 2 ตัว: ");
         
