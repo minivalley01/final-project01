@@ -309,11 +309,26 @@ void searchRepair() {
     }
 
     fclose(fp);
+    do {
     printf("ต้องการค้นหาต่อหรือไม่?(y/n): ");
     choice = getchar();
-    while (getchar() != '\n'); // เคลียร์ buffer
+    while (getchar() != '\n');
 
-    } while (choice == 'y' || choice == 'Y');
+    if (choice == 'y' || choice == 'Y') {
+        // 🟡 ถ้ากรอก y → ทำงานค้นหาต่อ
+        printf("🔎 ทำการค้นหาต่อ...\n");
+
+    } else if (choice == 'n' || choice == 'N') {
+        // 🟢 ถ้ากรอก n → ออกจากลูป
+        printf("✅ จบการทำงาน\n");
+        break;
+
+    } else {
+        // 🔴 ถ้ากรอกนอกเหนือ y/n → แจ้งเตือนและวนกลับไปถามใหม่
+        printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
+    }
+ } while (1);
+  }
 }
 void updateRecord(const char *filename) {
     struct Record records[MAX_RECORDS];
@@ -354,16 +369,26 @@ void updateRecord(const char *filename) {
 
     printf("\n--- อัปเดตรายการ ID: %s ---\n", records[found].id);
     
-    do {
-        printf("RepairID: ");
-        fgets(records[found].id, sizeof(records[found].id), stdin);
-        records[found].id[strcspn(records[found].id, "\n")] = 0;
-    } while (!hasLetter(records[found].id)&&(checkID(records[found].id)));
-        if (checkID(records[found].id)) {
-                break; 
-            } else {
-                printf("Please try again\n");
-            }
+   while (1) {
+    printf("RepairID: ");
+    fgets(records[found].id, sizeof(records[found].id), stdin);
+    records[found].id[strcspn(records[found].id, "\n")] = 0;
+
+    
+    if (!hasLetter(records[found].id)) {
+        printf("❌ ID ต้องมีตัวอักษรอย่างน้อย 1 ตัว\n");
+        continue;  
+    }
+
+    
+    if (!checkID(records[found].id)) {
+        printf("❌ ID นี้ถูกใช้ไปแล้ว โปรดลองใหม่\n");
+        continue;
+    }
+
+    
+    break;
+}
     toUpperStr(records[found].id);
 
    
