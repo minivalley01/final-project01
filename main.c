@@ -134,30 +134,34 @@ void searchRepair() {
     char line[512];
     int found = 0;
 
-    // ANSI สีสำหรับแต่ละคอลัมน์
+    // ANSI สี
     const char *BLUE   = "\033[1;34m";
-    const char *GREEN  = "\033[1;32m";
     const char *YELLOW = "\033[1;33m";
     const char *RED    = "\033[1;31m";
     const char *CYAN   = "\033[1;36m";
     const char *RESET  = "\033[0m";
 
+    // พิมพ์หัวตาราง **ครั้งเดียว**
+    printf("%s| %-6s |%s %-15s |%s %-20s |%s %-8s |%s\n",
+           BLUE, "RepairID", YELLOW, "Carmodel", RED, "Repairdetails", CYAN, "Cost(Bath)", RESET);
+    printf("---------------------------------------------------------------\n");
 
     while (fgets(line, sizeof(line), fp)) {
         char ID[10], Model[50], Problem[200];
         int Cost;
-        line[strcspn(line, "\n")] = 0;
-        sscanf(line, "%[^,],%[^,],%[^,],%d", ID, Model, Problem, &Cost);
 
-        // แปลงเป็นพิมพ์เล็กสำหรับตรวจสอบ keyword
+        line[strcspn(line, "\n")] = 0; // ตัด \n
+
+        if (sscanf(line, "%[^,],%[^,],%[^,],%d", ID, Model, Problem, &Cost) != 4)
+            continue;
+
         char ID_l[10], Model_l[50], Problem_l[200];
         strcpy(ID_l, ID); strToLower(ID_l);
         strcpy(Model_l, Model); strToLower(Model_l);
         strcpy(Problem_l, Problem); strToLower(Problem_l);
 
-        if (strstr(ID_l, keyword) != NULL || 
-            strstr(Model_l, keyword) != NULL || strstr(Problem_l, keyword) != NULL) {
-            printf("%s| %-6s |%s %-15s |%s %-20s |%s %-8d |%s\n",
+        if (strstr(ID_l, keyword) != NULL || strstr(Model_l, keyword) != NULL || strstr(Problem_l, keyword) != NULL) {
+            printf("%s| %-10s |%s %-17s |%s %-22s |%s %-10d |%s\n",
                    BLUE, ID, YELLOW, Model, RED, Problem, CYAN, Cost, RESET);
             found = 1;
         }
@@ -169,6 +173,7 @@ void searchRepair() {
 
     fclose(fp);
 }
+
 
 
 
