@@ -144,7 +144,6 @@ int loadData(struct Record records[], const char *filename) {
     fclose(fp);
     return count;
 }
-
 void saveData(struct Record records[], int count, const char *filename) {
     FILE *fp = fopen(filename, "w");
     if (!fp) {
@@ -176,6 +175,11 @@ void printTable(struct Record records[], int count, const char *filename) {
 
 
 }
+
+
+
+
+
 void addRepair() {
     int Expense;
     char ID[10], Car[100], Details[500];
@@ -320,58 +324,63 @@ void updateRecord(const char *filename) {
         return;
     }
 
-    // แสดงข้อมูลทั้งหมด
-    printf("\n--- ข้อมูลทั้งหมด ---\n");
-    for (int i = 0; i < count; i++) {
-        printf("%d) ID: %s | Model: %s | Problem: %s | Cost: %d\n",
-               i + 1, records[i].id, records[i].model, records[i].problem, records[i].cost);
-    }
+    printTable(records, count, filename);
+    
 
     // เลือกรายการที่จะอัปเดต
-    int choice;
-    printf("\nเลือกรายการที่จะอัปเดต (1 - %d): ", count);
-    scanf("%d", &choice);
-    getchar();
+    char targetID[20];
+    printf("\nกรอก RepairID ที่ต้องการอัปเดต: ");
+    fgets(targetID, sizeof(targetID), stdin);
+    targetID[strcspn(targetID, "\n")] = 0;
+    toUpperStr(targetID);
 
-    if (choice < 1 || choice > count) {
-        printf("ตัวเลือกไม่ถูกต้อง\n");
+    int found = -1;
+    for (int i = 0; i < count; i++) {
+        char tempID[20];
+        strcpy(tempID, records[i].id);
+        toUpperStr(tempID);
+        if (strcmp(tempID, targetID) == 0) {
+            found = i;
+            break;
+        }
+    }
+
+    if (found == -1) {
+        printf("❌ ไม่พบ ID นี้ในระบบ\n");
         return;
     }
- int index = choice - 1;
 
+    printf("\n--- อัปเดตรายการ ID: %s ---\n", records[found].id);
     // กรอก ID ใหม่
-    char id[20];
     do {
-        printf("กรอก ID ใหม่ (อย่างน้อย 1 ตัวอักษร): ");
-        fgets(id, sizeof(id), stdin);
-        id[strcspn(id, "\n")] = 0;
-    } while (!hasLetter(id));
-    toUpperStr(id);
-    strcpy(records[index].id, id);
+        printf("RepairID: ");
+        fgets(records[found].id, sizeof(records[found].id), stdin);
+        records[found].id[strcspn(records[found].id, "\n")] = 0;
+    } while (!hasLetter(records[found].id));
+    toUpperStr(records[found].id);
 
-    // กรอก Model ใหม่
-    char model[50];
+    // อัปเดต Model
     do {
-        printf("กรอกชื่อรถใหม่ (ต้องมีตัวอักษรอย่างน้อย 2 ตัว): ");
-        fgets(model, sizeof(model), stdin);
-        model[strcspn(model, "\n")] = 0;
-    } while (!hasAtLeastTwoLetters(model));
-    strcpy(records[index].model, model);
+        printf("Car Model: ");
+        fgets(records[found].model, sizeof(records[found].model), stdin);
+        records[found].model[strcspn(records[found].model, "\n")] = 0;
+    } while (!hasLetterCount(records[found].model,2));
 
-    // กรอกปัญหาใหม่
-    printf("กรอกปัญหาใหม่: ");
-    fgets(records[index].problem, sizeof(records[index].problem), stdin);
-    records[index].problem[strcspn(records[index].problem, "\n")] = 0;
+    // อัปเดต Problem
+    do {
+        printf("Repair Details ใหม่: ");
+        fgets(records[found].problem, sizeof(records[found].problem), stdin);
+        records[found].problem[strcspn(records[found].problem, "\n")] = 0;
+    } while (!hasLetterCount(records[found].model,3));
 
-    // กรอกค่าใช้จ่ายใหม่ (เฉพาะตัวเลข)
+    // อัปเดต Cost (เฉพาะตัวเลข)
     char costStr[20];
-    int validCost = 0;
+    int validCost;
     do {
-        printf("กรอกค่าใช้จ่ายใหม่ (เฉพาะตัวเลข): ");
+        validCost = 1;
+        printf("Cost: ");
         fgets(costStr, sizeof(costStr), stdin);
         costStr[strcspn(costStr, "\n")] = 0;
-
-        validCost = 1;
         for (int i = 0; costStr[i]; i++) {
             if (!isdigit(costStr[i])) {
                 validCost = 0;
@@ -379,11 +388,10 @@ void updateRecord(const char *filename) {
             }
         }
     } while (!validCost);
-    records[index].cost = atoi(costStr);
+    records[found].cost = atoi(costStr);
 
-    // บันทึกข้อมูลกลับลงไฟล์
     saveData(records, count, filename);
-    printf("\n✅ อัปเดตข้อมูลเรียบร้อยแล้ว\n");
+    printf("\n✅ อัปเดตข้อมูลเรียบร้อยแล้ว!\n");
 }
 
 
@@ -418,7 +426,8 @@ int main() {
                     }
             break; 
             case 3: if (confirmAction("คุณต้องการอัพเดตข้อมูลการซ่อมเเซมใช่ไหม")) {
-                        updateRecord();
+                        updateRecord("data.csv");
+                        return 0;
                     } else {
                      printf("กำลังกลับไปหน้าเมนู...\n");
                     }
