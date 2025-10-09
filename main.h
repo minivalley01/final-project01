@@ -33,5 +33,7 @@ void updateRepair(const char *filename);
 void deleteRepair(const char *filename);
 void restoreRepair(const char *filename);
 void deleteOrRestoreMenu();
-
+void runUnitTests();
+void test_checkID();
+void test_addRepair();
 #endif
