@@ -1,39 +1,64 @@
-#include <stdio.h>
 #include <assert.h>
-#include <string.h>
-#include "main.h"   // include header ที่ประกาศฟังก์ชัน checkID และ addRepair
+#include <stdio.h>
+#include "main.h"
+
+
+
+
+void ensureTestFileExists(const char* filename) {
+    FILE* fp = fopen(filename, "r"); // ลองเปิดไฟล์อ่าน
+    if (fp == NULL) {                // ถ้าเปิดไม่ได้ แปลว่าไฟล์ยังไม่มี
+        fp = fopen(filename, "w");   // สร้างไฟล์ใหม่
+        if (fp != NULL) {
+            printf("สร้างไฟล์ %s สำเร็จ\n", filename);
+            
+            fclose(fp);
+        } else {
+            printf("❌ ไม่สามารถสร้างไฟล์ %s ได้\n", filename);
+        }
+    } else {
+        fclose(fp); 
+    }
+}
+
 
 void test_checkID() {
-    // จำลองไฟล์ทดสอบ (คุณอาจต้องสร้างไฟล์ "test_data.csv" ไว้ก่อน)
-    const char *testFile = "test_data.csv";
+    const char* testFile = "test_data.csv";
 
-    // เคส ID ที่มีอยู่
+    
     assert(checkID(testFile, "A001") == 1);
 
-    // เคส ID ที่ไม่มีอยู่
+    
     assert(checkID(testFile, "ZZZZ") == 0);
 
     printf("✅ test_checkID ผ่านแล้ว\n");
 }
 
+
 void test_addRepair() {
-    const char *testFile = "test_data.csv";
+    const char* testFile = "test_data.csv";
 
-    // เพิ่มข้อมูลใหม่
-    addRepair(testFile, "B002", "เปลี่ยนยาง");
+    
+    addRepair(testFile, "B999", "Honda Jazz", "Replace tires", 3000);
 
-    // ตรวจสอบว่า ID ที่เพิ่มไปหาเจอหรือไม่
-    assert(checkID(testFile, "B002") == 1);
+    
+    assert(checkID(testFile, "B999") == 1);
 
     printf("✅ test_addRepair ผ่านแล้ว\n");
 }
 
 int main() {
-    printf("===== เริ่มทดสอบ Unit Test =====\n");
+    
+    const char* testFile = "test_data.csv";
+    ensureTestFileExists(testFile);
 
     test_checkID();
     test_addRepair();
+    return 0;
 
-    printf("===== ✅ การทดสอบเสร็จสมบูรณ์ =====\n");
+
+    test_checkID();
+    test_addRepair();
     return 0;
 }
+
