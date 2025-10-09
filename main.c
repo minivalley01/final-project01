@@ -38,7 +38,7 @@ int main() {
                     }
             break; 
             case 3: if (confirmAction("คุณต้องการอัพเดตข้อมูลการซ่อมเเซมใช่ไหม")) {
-                        updateRepair("data.csv", NULL, NULL, NULL, -1);    
+                        updateRepair("data.csv", NULL, NULL, NULL, -1,0);    
                     } else {
                      printf("กำลังกลับไปหน้าเมนู...\n");
                     }
