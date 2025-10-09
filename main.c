@@ -10,7 +10,7 @@
 struct Record {
     char id[20];
     char model[50];
-    char problem[100];
+    char problem[500];
     int cost;
     int status; // 1=active, 0=deleted
 };
@@ -180,7 +180,41 @@ void printTable(struct Record records[], int count, const char *filename) {
 
 
 }
+void deleteOrRestoreMenu() {
+    int choice;
+    do {
+        printf("\n===== 🧾 เมนูลบ / กู้คืนข้อมูล =====\n");
+        printf("1) ลบข้อมูลการซ่อม\n");
+        printf("2) กู้คืนข้อมูลที่ถูกลบ\n");
+        printf("3) กลับเมนูหลัก\n");
+        int choice = getIntegerInput("กรุณาเลือกเมนูที่ต้องการ : ");
 
+        switch (choice) {
+            case 1: deleteRepair("data.csv"); break;
+            case 2: restoreRepair(); break;
+            
+        }
+    } while (choice != 3);
+}
+void printDeletedRecords(struct Record records[], int count) {
+    printf("\n🗑️ ข้อมูลที่ถูกลบ:\n");
+    printf("%-10s %-15s %-30s %-10s\n", "ID", "CAR", "DETAILS", "COST");
+    printf("---------------------------------------------------------------\n");
+    int found = 0;
+    for (int i = 0; i < count; i++) {
+        if (records[i].status == 0) {
+            printf("%-10s %-15s %-30s %-10d\n",
+                   records[i].id,
+                   records[i].model,
+                   records[i].problem,
+                   records[i].cost);
+            found = 1;
+        }
+    }
+    if (!found) {
+        printf("⚠️  ไม่มีข้อมูลที่ถูกลบ\n");
+    }
+}
 
 
 
@@ -225,7 +259,7 @@ void addRepair() {
             }
             break;
         }
-        printf("\nRepair details {ใช้ |(vertical bar) ขั้นหากมีหลายกรณี}: ");  
+        printf("\nRepair details {ใช้*คั่นหากมีหลายกรณี}: ");  
         fgets(Details, sizeof(Details), stdin);
         Details[strcspn(Details, "\n")] = 0;
         while (1) {
@@ -514,7 +548,62 @@ void updateRepair(const char *filename) {
 
     } while (1);
 }
+void restoreRepair(const char *filename) {
+    struct Record records[MAX_RECORDS];
+    int count = loadData(records, filename);
+    if (count == 0) {
+        printf("❌ ไม่มีข้อมูลในระบบ\n");
+        return;
+    }
 
+    char choice;
+    do {
+        printDeletedRecords(records, count);
+
+        char targetID[20];
+        printf("\nกรอก RepairID ที่ต้องการกู้คืน: ");
+        fgets(targetID, sizeof(targetID), stdin);
+        targetID[strcspn(targetID, "\n")] = 0;
+        toUpperStr(targetID);
+
+        int found = -1;
+        for (int i = 0; i < count; i++) {
+            char tempID[20];
+            strcpy(tempID, records[i].id);
+            toUpperStr(tempID);
+            if (strcmp(tempID, targetID) == 0 && records[i].status == 0) {
+                found = i;
+                break;
+            }
+        }
+
+        if (found == -1) {
+            printf("❌ ไม่พบ ID นี้ในรายการที่ถูกลบ\n");
+        } else {
+            printf("✅ คุณต้องการกู้คืนข้อมูล ID: %s ใช่หรือไม่? (y/n): ", records[found].id);
+            choice = getchar();
+            int c; while ((c = getchar()) != '\n' && c != EOF);
+
+            if (choice == 'y' || choice == 'Y') {
+                records[found].status = 1;
+                saveData(records, count, filename);
+                printf("♻️  กู้คืนข้อมูลเรียบร้อยแล้ว\n");
+            } else {
+                printf("❌ ยกเลิกการกู้คืน\n");
+            }
+        }
+
+        do {
+            printf("\nต้องการกู้คืนข้อมูลต่อหรือไม่? (y/n): ");
+            choice = getchar();
+            int c; while ((c = getchar()) != '\n' && c != EOF);
+            if (choice == 'y' || choice == 'Y') break;
+            else if (choice == 'n' || choice == 'N') return;
+            else printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
+        } while (1);
+
+    } while (1);
+}
 
 
 
@@ -553,8 +642,8 @@ int main() {
                      printf("กำลังกลับไปหน้าเมนู...\n");
                     }
             break; 
-            case 4: if (confirmAction("คุณต้องการลบข้อมูลการซ่อมเเซมใช่ไหม")) {
-                        deleteRepair("data.csv");    
+            case 4: if (confirmAction("คุณต้องการลบ/กู้คืนข้อมูลการซ่อมเเซมใช่ไหม")) {
+                        deleteOrRestoreMenu("data.csv");    
                     } else {
                      printf("กำลังกลับไปหน้าเมนู...\n");
                     }
