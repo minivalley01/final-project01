@@ -73,24 +73,26 @@ int getIntegerInput(const char *message) {
     return number;
 }
 int checkID(const char *filename, const char *ID) { 
-    FILE *fp = fopen(filename, "r");
-    if (fp == NULL) return 1; 
-    if (strlen(ID) > 4 || strlen(ID) < 4) { 
-        printf("RepairID is incorrect\n");
-        return 0;
+    if (strlen(ID) != 4) { 
+        return 0; // ID ไม่ถูกต้อง
     }    
+
+    FILE *fp = fopen(filename, "r");
+    if (!fp) return 1; // ไฟล์ไม่มี ให้ถือว่า ID ใช้ได้
+
     char line[200];  
     while (fgets(line, sizeof(line), fp)) {
-    char existingID[10];
-    sscanf(line, "%[^,]", existingID);  
-    if (strcmp(existingID, ID) == 0) {
-            printf("RepairID has already been used\n");
-            return 0; 
+        char existingID[10];
+        sscanf(line, "%[^,]", existingID);  
+        if (strcmp(existingID, ID) == 0) {
+            fclose(fp);
+            return 0; // ID ซ้ำ
         }
     }
     fclose(fp);
-    return 1; 
+    return 1; // ID ผ่านการตรวจสอบ
 }
+
 void toUpperStr(char *str) {
     for (int i = 0; str[i]; i++) {
         str[i] = toupper((unsigned char)str[i]);
@@ -198,7 +200,7 @@ void addRepairToFile(const char* filename, const char* ID,
     fprintf(fp, "%s,%s,%s,%d,1\n", ID, CarModel, Details, Cost); 
     fclose(fp);
 }
-void addRepair() {
+void addRepair(const char* filename) {
     int Expense;
     char ID[10], Car[100], Details[500];
     char choice;
@@ -206,7 +208,7 @@ void addRepair() {
     do {
         printf("\n1) ระบบเพิ่มข้อมูลการซ่อมเเซมใหม่\n");
 
-        FILE *ADD = fopen("data.csv", "a"); 
+        FILE *ADD = fopen(filename, "a"); 
         if (ADD == NULL) {
             printf("ERROR เปิดไฟล์ไม่สำเร็จ\n");
             return;
@@ -215,6 +217,7 @@ void addRepair() {
             printf("RepairID: ");
             fgets(ID, sizeof(ID), stdin);
             ID[strcspn(ID, "\n")] = 0;
+            
             toUpperStr(ID);
 
             if (!hasLetter(ID)) {
@@ -222,7 +225,8 @@ void addRepair() {
                 continue;
             }
 
-            if (!checkID("data.csv", ID)) { 
+            if (!checkID(filename, ID)) { 
+                printf("❌ ID นี้ถูกใช้ไปแล้ว โปรดลองใหม่\n");
                 continue;
             }
             break;
@@ -617,14 +621,14 @@ void runUnitTests() {
 
 void test_checkID() {
     const char* testFile = "test_data.csv";
-    assert(checkID(testFile, "A001") == 1);
-    assert(checkID(testFile, "ZZZZ") == 0);
+    assert(checkID(testFile, "A001") == 0);
+    assert(checkID(testFile, "ZZZZ") == 1);
     printf("✅ test_checkID ผ่านแล้ว\n");
 }
 
 void test_addRepair() {
     const char* testFile = "test_data.csv";
     addRepairToFile(testFile, "B999", "Honda Jazz", "Replace tires", 3000);
-    assert(checkID(testFile, "B999") == 1);
+    assert(checkID(testFile, "B999") == 0);
     printf("✅ test_addRepair ผ่านแล้ว\n");
 }
