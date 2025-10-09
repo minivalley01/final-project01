@@ -34,6 +34,7 @@ void deleteRepair(const char *filename,const char* ID);
 void restoreRepair(const char *filename,const char* ID);
 void deleteOrRestoreMenu();
 void runUnitTests();
+void runE2ETest();
 void test_checkID();
 void test_addRepair();
 #endif
