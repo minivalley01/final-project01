@@ -1,11 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
 #include "main.h"
 
 
-#define MAX_LINE 256
+/*#define MAX_LINE 256
 #define MAX_RECORDS 100
 
 //struct Record {
@@ -20,7 +18,7 @@
 
 
 
-int confirmAction(const char *message) {
+/*int confirmAction(const char *message) {
     char choice1;
 
     while (1) {
@@ -37,8 +35,8 @@ int confirmAction(const char *message) {
             printf("⚠️  กรุณากรอกแค่ y หรือ n เท่านั้น\n");
         }
     }
-}
-int hasLetterCount(const char *str, int minLetters) {
+}*/
+/*int hasLetterCount(const char *str, int minLetters) {
     int count = 0;
     for (int i = 0; str[i] != '\0'; i++) {
         if (isalpha((unsigned char)str[i])) {
@@ -46,15 +44,15 @@ int hasLetterCount(const char *str, int minLetters) {
         }
     }
     return count >= minLetters;
-}
-int hasLetter(const char *s) {
+}*/
+/*int hasLetter(const char *s) {
     while (*s) {
         if (isalpha(*s)) return 1;
         s++;
     }
     return 0;
-}
-int getIntegerInput(const char *message) { // ใช้ตรวจสอบว่าเป็นตัวเลขไหม
+}*/
+/*int getIntegerInput(const char *message) { // ใช้ตรวจสอบว่าเป็นตัวเลขไหม
     char buffer[100];   // เก็บข้อความที่ผู้ใช้พิมพ์
     int isValid = 0;
     int number;
@@ -83,8 +81,8 @@ int getIntegerInput(const char *message) { // ใช้ตรวจสอบว�
     }
 
     return number;
-}
-int checkID(const char *filename, const char *ID) { 
+}*/
+/*int checkID(const char *filename, const char *ID) { 
     FILE *fp = fopen("data.csv", "r");
     if (fp == NULL) return 1; // ถ้าไฟล์ยังไม่มี ให้ผ่านไปเลย
     if (strlen(ID) > 4 || strlen(ID) < 4) { //เช็คจำนวนตัวอักษร
@@ -102,17 +100,17 @@ int checkID(const char *filename, const char *ID) {
     }
     fclose(fp);
     return 1; // ไม่ซ้ำเเละผ่านการตรวจสอบ
-}
-void toUpperStr(char *str) {
+}*/
+/*void toUpperStr(char *str) {
     for (int i = 0; str[i]; i++) {
         str[i] = toupper((unsigned char)str[i]);
     }
-}
-void strToLower(char *str) {
+}*/
+/*void strToLower(char *str) {
     for (int i = 0; str[i]; i++)
         str[i] = tolower(str[i]);
-}
-void trim(char *str) {  // ตัด space/tab ข้างหน้าและข้างหลัง
+}*/
+/*void trim(char *str) {  // ตัด space/tab ข้างหน้าและข้างหลัง
     // ตัด space/tab ข้างหน้า
     char *p = str;
     while(*p && isspace(*p)) p++;
@@ -124,8 +122,8 @@ void trim(char *str) {  // ตัด space/tab ข้างหน้าและ
         str[len-1] = 0;
         len--;
     }
-}
-int loadData(struct Record records[], const char *filename) {
+}*/
+/*int loadData(struct Record records[], const char *filename) {
     FILE *fp = fopen(filename, "r");
     if (!fp) {
         printf("ไม่พบไฟล์ข้อมูล\n");
@@ -146,8 +144,8 @@ int loadData(struct Record records[], const char *filename) {
     }
     fclose(fp);
     return count;
-}
-void saveData(struct Record records[], int count, const char *filename) {
+}*/
+/*void saveData(struct Record records[], int count, const char *filename) {
     FILE *fp = fopen(filename, "w");
     if (!fp) {
         printf("ไม่สามารถบันทึกข้อมูลได้\n");
@@ -162,8 +160,8 @@ void saveData(struct Record records[], int count, const char *filename) {
                 records[i].status); // 1=active, 0=deleted
     }
     fclose(fp);
-}
-void printTable(struct Record records[], int count, const char *filename) {
+}*/
+/*void printTable(struct Record records[], int count, const char *filename) {
     printf("\n--- ข้อมูลทั้งหมดจากไฟล์ %s ---\n", filename);
     printf("+----------+----------------------+--------------------------+------------+\n");
     printf("| RepairID | Car Model            | Repair Details           | Cost (฿)   |\n");
@@ -180,8 +178,8 @@ void printTable(struct Record records[], int count, const char *filename) {
     printf("+----------+----------------------+--------------------------+------------+\n");
 
 
-}
-void printDeletedRecords(struct Record records[], int count) {
+}*/
+/*void printDeletedRecords(struct Record records[], int count) {
     printf("\n🗑️ ข้อมูลที่ถูกลบ:\n");
     printf("%-10s %-15s %-30s %-10s\n", "ID", "CAR", "DETAILS", "COST");
     printf("---------------------------------------------------------------\n");
@@ -199,13 +197,13 @@ void printDeletedRecords(struct Record records[], int count) {
     if (!found) {
         printf("⚠️  ไม่มีข้อมูลที่ถูกลบ\n");
     }
-}
+}*/
 
 
 
 
 
-void addRepair() {
+/*void addRepair() {
     int Expense;
     char ID[10], Car[100], Details[500];
     char choice;
@@ -267,8 +265,8 @@ void addRepair() {
         while ((c = getchar()) != '\n' && c != EOF); 
 
     }while (choice == 'y' || choice == 'Y');
-}
-void searchRepair() {
+}*/
+/*void searchRepair() {
     char keyword[50];
     char choice;
 
@@ -362,8 +360,8 @@ void searchRepair() {
         }
 
     } while (1);
-}
-void updateRepair(const char *filename) {
+}*/
+/*void updateRepair(const char *filename) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
     if (count == 0) {
@@ -471,8 +469,8 @@ void updateRepair(const char *filename) {
             }
         }
     }
-}
- void deleteRepair(const char *filename) {
+}*/
+ /*void deleteRepair(const char *filename) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
     if (count == 0) {
@@ -532,8 +530,8 @@ void updateRepair(const char *filename) {
         } while (1);
 
     } while (1);
-}
-void restoreRepair(const char *filename) {
+}*/
+/*void restoreRepair(const char *filename) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
     if (count == 0) {
@@ -588,8 +586,8 @@ void restoreRepair(const char *filename) {
         } while (1);
 
     } while (1);
-}
-void deleteOrRestoreMenu() {
+}*/
+/*void deleteOrRestoreMenu() {
     int choice;
     do {
         printf("\n===== 🧾 เมนูลบ / กู้คืนข้อมูล =====\n");
@@ -612,7 +610,7 @@ void deleteOrRestoreMenu() {
                 printf("⚠️ กรุณาเลือกเมนู 1 - 3 เท่านั้น\n");
         }
     } while (choice != 3);
-}
+}*/
 
 
 
@@ -628,6 +626,8 @@ int main() {
         printf("3) อัพเดทข้อมูลการซ่อมแซม\n");
         printf("4) ลบ/กู้คืนข้อมูลการซ่อมแซม\n");
         printf("5) แสดงข้อมูลการซ่อมแซมทั้งหมด\n");
+        printf("6) รัน Unit Test\n");
+        printf("7) รัน E2E Test\n");
         printf("0) ออกจากโปรแกรม\n");
         int choice = getIntegerInput("กรุณาเลือกเมนูที่ต้องการ : ");
 
@@ -661,6 +661,8 @@ int main() {
                     printTable(records,count,"data.csv");
             }
             break;
+            case 6: runUnitTests(); break;
+            case 7: runE2ETests(); break;
             case 0:
                printf("ออกจากโปรแกรมแล้ว ขอบคุณที่ใช้งาน!\n");
                 exit(0);
