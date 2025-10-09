@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "main.h"
-
+#include "test.h"
 
 /*#define MAX_LINE 256
 #define MAX_RECORDS 100
@@ -662,7 +662,7 @@ int main() {
             }
             break;
             case 6: runUnitTests(); break;
-            case 7: runE2ETests(); break;
+            //case 7: runE2ETests(); break;
             case 0:
                printf("ออกจากโปรแกรมแล้ว ขอบคุณที่ใช้งาน!\n");
                 exit(0);
