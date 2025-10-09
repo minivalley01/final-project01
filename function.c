@@ -5,7 +5,7 @@
 #include "main.h"
 #include <assert.h>
 
-#define TEST_FILE "test_data.csv"
+#define E2E_FILE "test_e2e.csv"
 
 
 int confirmAction(const char *message) {
@@ -663,22 +663,22 @@ void runUnitTests() {
     
     printf("✅ Unit Tests เสร็จสิ้น\n");
 }
-void runE2ETest() {
+void runE2ETests() {
     printf("=== รัน E2E Test ===\n");
-
+    remove(E2E_FILE);
     // 1️⃣ เพิ่มข้อมูล
-    addRepairToFile(TEST_FILE, "R999", "Honda Jazz", "Replace tires", 3000);
-    assert(checkID(TEST_FILE, "R999") == 1); // ซ้ำ
+    addRepairToFile(E2E_FILE, "R999", "Honda Jazz", "Replace tires", 3000);
+    assert(checkID(E2E_FILE, "R999") == 0); // ซ้ำ
 
     // 2️⃣ อัพเดตข้อมูล
-    updateRepair(TEST_FILE, "R999", "Honda Jazz", "Replace engine", 5000);
+    updateRepair(E2E_FILE, "R999", "Honda Jazz", "Replace engine", 5000);
 
     // 3️⃣ ลบข้อมูล
-    deleteRepair(TEST_FILE, "R999");
+    deleteRepair(E2E_FILE, "R999");
 
     // 4️⃣ ตรวจสอบว่า status = 0
     struct Record records[MAX_RECORDS];
-    int count = loadData(records, TEST_FILE);
+    int count = loadData(records, E2E_FILE);
     int found = -1;
     for (int i = 0; i < count; i++) {
         if (strcmp(records[i].id, "R999") == 0) {
@@ -690,10 +690,10 @@ void runE2ETest() {
     assert(records[found].status == 0);
 
     // 5️⃣ กู้คืนข้อมูล
-    restoreRepair(TEST_FILE, "R999");
+    restoreRepair(E2E_FILE, "R999");
 
     // 6️⃣ ตรวจสอบว่า status = 1
-    count = loadData(records, TEST_FILE);
+    count = loadData(records, E2E_FILE);
     found = -1;
     for (int i = 0; i < count; i++) {
         if (strcmp(records[i].id, "R999") == 0) {
