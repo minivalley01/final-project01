@@ -633,7 +633,7 @@ int main() {
 
         switch (choice) {
             case 1: if (confirmAction("คุณต้องการเพิ่มข้อมูลการซ่อมเเซมใช่ไหม")) {
-                        addRepair();
+                        addRepair("data.csv");
                     } else {
                      printf("กำลังกลับไปหน้าเมนู\n");
                     }
@@ -666,11 +666,12 @@ int main() {
                     } else {
                      printf("กำลังกลับไปหน้าเมนู\n");
                     }
-            case 7: if (confirmAction("คุณต้องการ Run E2E_test ใช่ไหม")) {
+            break;
+                    /*case 7: if (confirmAction("คุณต้องการ Run E2E_test ใช่ไหม")) {
                         runE2ETests();
                     } else {
                      printf("กำลังกลับไปหน้าเมนู\n");
-                    }
+                    }*/
             case 0:if (confirmAction("คุณต้องการออกจากโปรเเกรมใช่ไหม")) {
                         printf("ออกจากโปรแกรมแล้ว ขอบคุณที่ใช้งาน!\n");
                         exit(0);
