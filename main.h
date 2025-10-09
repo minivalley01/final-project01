@@ -29,9 +29,9 @@ void addRepairToFile(const char* filename, const char* ID,
                      const char* CarModel, const char* Details, int Cost);
 void addRepair();
 void searchRepair();
-void updateRepair(const char *filename);
-void deleteRepair(const char *filename);
-void restoreRepair(const char *filename);
+void updateRepair(const char *filename,const char* ID);
+void deleteRepair(const char *filename,const char* ID);
+void restoreRepair(const char *filename,const char* ID);
 void deleteOrRestoreMenu();
 void runUnitTests();
 void test_checkID();
