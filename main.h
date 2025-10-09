@@ -29,7 +29,7 @@ void addRepairToFile(const char* filename, const char* ID,
                      const char* CarModel, const char* Details, int Cost);
 void addRepair();
 void searchRepair();
-void updateRepair(const char *filename,const char* ID);
+void updateRepair(const char *filename,const char* ID,const char* newCar, const char* newDetails, int newExpense);
 void deleteRepair(const char *filename,const char* ID);
 void restoreRepair(const char *filename,const char* ID);
 void deleteOrRestoreMenu();
