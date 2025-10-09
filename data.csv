@@ -9,7 +9,7 @@ R008,Nissan,Cooling System Repair,2300,1
 R009,BYD,Body Repair,3000,1
 R010,ORA,Air Conditioning Repair,850,1
 R011,volvo xc40,Air Conditioning Repair,2500,1
-R023,MG,ENGINE CHANGE,2560,1
+R012,MG,ENGINE CHANGE ,6000,1
 R013,AUDI,Electrical Repair,4000,1
 R014,BMW,Brake Repair*Oil Change,4500,1
 R015,PORSCHE,Oil Change,890,1
@@ -21,4 +21,5 @@ R020,tesla,Oil Change,600,1
 R021,FORD,oil change*bom,5000,1
 R022,BMW,OIL CHANGE,1450,1
 R012,MG,ENGINE REPAIR,2500,0
-R024,Hundai,oil change,450,1
+R024,Hundai,oil change,450,0
+R025,BUGATTI,oil change,4500,0
