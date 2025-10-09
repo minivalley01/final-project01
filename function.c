@@ -73,8 +73,8 @@ int getIntegerInput(const char *message) {
     return number;
 }
 int checkID(const char *filename, const char *ID) { 
-    FILE *fp = fopen("data.csv", "r");
-    if (fp == NULL) return 1; // ถ้าไฟล์ยังไม่มี ให้ผ่านไปเลย
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) return 0; // ถ้าไฟล์ยังไม่มี ให้ผ่านไปเลย
     if (strlen(ID) > 4 || strlen(ID) < 4) { //เช็คจำนวนตัวอักษร
         printf("RepairID is incorrect\n");
         return 0;
@@ -85,11 +85,11 @@ int checkID(const char *filename, const char *ID) {
     sscanf(line, "%[^,]", existingID); // อ่านข้อมูลก่อนเครื่องหมาย , 
     if (strcmp(existingID, ID) == 0) {
             printf("RepairID has already been used\n");
-            return 0; 
+            return 1; 
         }
     }
     fclose(fp);
-    return 1; // ไม่ซ้ำเเละผ่านการตรวจสอบ
+    return 0; // ไม่ซ้ำเเละผ่านการตรวจสอบ
 }
 void toUpperStr(char *str) {
     for (int i = 0; str[i]; i++) {
@@ -187,6 +187,16 @@ void printDeletedRecords(struct Record records[], int count) {
     if (!found) {
         printf("⚠️  ไม่มีข้อมูลที่ถูกลบ\n");
     }
+}
+void addRepairToFile(const char* filename, const char* ID,
+                     const char* CarModel, const char* Details, int Cost) {
+    FILE* fp = fopen(filename, "a");
+    if (!fp) {
+        printf("Cannot open file %s\n", filename);
+        return;
+    }
+    fprintf(fp, "%s,%s,%s,%d,1\n", ID, CarModel, Details, Cost); 
+    fclose(fp);
 }
 void addRepair() {
     int Expense;
