@@ -361,7 +361,7 @@ void searchRepair() {
 
     } while (1);
 }
-void updateRepair(const char *filename,const char* ID) {
+void updateRepair(const char *filename,const char* ID,const char* newCar, const char* newDetails, int newExpense) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
     if (count == 0) {
