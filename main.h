@@ -29,9 +29,9 @@ void addRepairToFile(const char* filename, const char* ID,
                      const char* CarModel, const char* Details, int Cost);
 void addRepair();
 void searchRepair();
-void updateRepair(const char *filename,const char* ID,const char* newCar, const char* newDetails, int newExpense);
-void deleteRepair(const char *filename,const char* ID);
-void restoreRepair(const char *filename,const char* ID);
+void updateRepair(const char *filename,const char* ID,const char* newCar, const char* newDetails, int newExpense, int isTest);
+void deleteRepair(const char *filename,const char* ID, int isTest);
+void restoreRepair(const char *filename,const char* ID, int isTest);
 void deleteOrRestoreMenu();
 void runUnitTests();
 void runE2ETests();
