@@ -25,6 +25,8 @@ void saveData(struct Record records[], int count, const char *filename);
 void printTable(struct Record records[], int count, const char *filename);
 void printDeletedRecords(struct Record records[], int count);
 int checkID(const char *filename, const char *ID);
+void addRepairToFile(const char* filename, const char* ID,
+                     const char* CarModel, const char* Details, int Cost);
 void addRepair();
 void searchRepair();
 void updateRepair(const char *filename);
