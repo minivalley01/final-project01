@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "main.h"
-
+#include <assert.h>
 
 
 
@@ -74,22 +74,22 @@ int getIntegerInput(const char *message) {
 }
 int checkID(const char *filename, const char *ID) { 
     FILE *fp = fopen(filename, "r");
-    if (fp == NULL) return 0; // ถ้าไฟล์ยังไม่มี ให้ผ่านไปเลย
-    if (strlen(ID) > 4 || strlen(ID) < 4) { //เช็คจำนวนตัวอักษร
+    if (fp == NULL) return 1; 
+    if (strlen(ID) > 4 || strlen(ID) < 4) { 
         printf("RepairID is incorrect\n");
         return 0;
     }    
-    char line[200];  //เช็คว่าซ้ำไหม
+    char line[200];  
     while (fgets(line, sizeof(line), fp)) {
     char existingID[10];
-    sscanf(line, "%[^,]", existingID); // อ่านข้อมูลก่อนเครื่องหมาย , 
+    sscanf(line, "%[^,]", existingID);  
     if (strcmp(existingID, ID) == 0) {
             printf("RepairID has already been used\n");
-            return 1; 
+            return 0; 
         }
     }
     fclose(fp);
-    return 0; // ไม่ซ้ำเเละผ่านการตรวจสอบ
+    return 1; 
 }
 void toUpperStr(char *str) {
     for (int i = 0; str[i]; i++) {
@@ -212,21 +212,22 @@ void addRepair() {
             return;
         }
         while (1) {
-            printf("\nRepairID: "); 
-            scanf("%s", ID);
-            int c; while ((c = getchar()) != '\n' && c != EOF); 
+            printf("RepairID: ");
+            fgets(ID, sizeof(ID), stdin);
+            ID[strcspn(ID, "\n")] = 0;
+            toUpperStr(ID);
+
             if (!hasLetter(ID)) {
                 printf("❌ ID ต้องมีตัวอักษรอย่างน้อย 1 ตัว\n");
                 continue;
             }
-            toUpperStr(ID);
 
-            if (checkID("data.csv",ID)) {
-                break; 
-            } else {
-                printf("Please try again\n");
+            if (!checkID("data.csv", ID)) { 
+                continue;
             }
+            break;
         }
+
         while (1) {
             printf("\nCar model: ");
             fgets(Car, sizeof(Car), stdin);
@@ -605,4 +606,25 @@ void deleteOrRestoreMenu() {
                 printf("⚠️ กรุณาเลือกเมนู 1 - 3 เท่านั้น\n");
         }
     } while (choice != 3);
+}
+void runUnitTests() {
+    printf("=== รัน Unit Tests ===\n");
+    test_checkID();
+    test_addRepair();
+    
+    printf("✅ Unit Tests เสร็จสิ้น\n");
+}
+
+void test_checkID() {
+    const char* testFile = "test_data.csv";
+    assert(checkID(testFile, "A001") == 1);
+    assert(checkID(testFile, "ZZZZ") == 0);
+    printf("✅ test_checkID ผ่านแล้ว\n");
+}
+
+void test_addRepair() {
+    const char* testFile = "test_data.csv";
+    addRepairToFile(testFile, "B999", "Honda Jazz", "Replace tires", 3000);
+    assert(checkID(testFile, "B999") == 1);
+    printf("✅ test_addRepair ผ่านแล้ว\n");
 }
