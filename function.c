@@ -513,136 +513,116 @@ void deleteRepair(const char *filename,const char* ID, int isTest) {
         printf("❌ ไม่มีข้อมูลให้ลบ\n");
         return;
     }
-    int continueUpdate = 1;
-    char choice;
-    do {
-        printTable(records, count, filename); 
 
-        char targetID[20];
-        if (ID != NULL) {
-        // ถ้าได้รับ ID จาก argument ใช้เลย
+    char targetID[20];
+
+    if (ID != NULL) {
+        // สำหรับ E2E test ใช้ ID ที่ส่งมา
         strcpy(targetID, ID);
-        } else {
-        // ถ้าไม่ได้รับ argument ให้ถามผู้ใช้
+    } else {
+        // เมนูหลัก ให้ผู้ใช้กรอก
+        printTable(records, count, filename);
         printf("กรอก RepairID ที่ต้องการลบ: ");
         fgets(targetID, sizeof(targetID), stdin);
         targetID[strcspn(targetID, "\n")] = 0;
-        }
-        
-        toUpperStr(targetID);
+    }
 
-        int found = -1;
-        for (int i = 0; i < count; i++) {
-            char tempID[20];
-            strcpy(tempID, records[i].id);
-            toUpperStr(tempID);
-            if (strcmp(tempID, targetID) == 0) {
-                found = i;
-                break;
-            }
-        }
+    toUpperStr(targetID);
 
-        if (found == -1) {
-            printf("❌ ไม่พบ ID นี้ในระบบ\n");
-        } else if (records[found].status == 0) {
-            printf("❌ ข้อมูลนี้ถูกลบไปแล้ว\n");
-        } else {
-            
+    int found = -1;
+    for (int i = 0; i < count; i++) {
+        char tempID[20];
+        strcpy(tempID, records[i].id);
+        toUpperStr(tempID);
+        if (strcmp(tempID, targetID) == 0) {
+            found = i;
+            break;
+        }
+    }
+
+    if (found == -1) {
+        printf("❌ ไม่พบ ID นี้ในระบบ\n");
+        return;
+    } else if (records[found].status == 0) {
+        printf("❌ ข้อมูลนี้ถูกลบไปแล้ว\n");
+        return;
+    } else {
+        if (!isTest) {
+            // ถามผู้ใช้แค่เมนูหลัก
+            char choice;
             printf("⚠️ คุณต้องการลบข้อมูล ID: %s ใช่หรือไม่? (y/n): ", records[found].id);
             choice = getchar();
-            int c; while ((c = getchar()) != '\n' && c != EOF); 
+            int c; while ((c = getchar()) != '\n' && c != EOF);
 
-            if (choice == 'y' || choice == 'Y') {
-                records[found].status = 0; 
-                saveData(records, count, filename);
-                printf("✅ ลบข้อมูลเรียบร้อยแล้ว\n");
-            } else {
+            if (choice != 'y' && choice != 'Y') {
                 printf("❌ ยกเลิกการลบ\n");
+                return;
             }
         }
-
-        if (!isTest) {
-            do {
-                printf("\nต้องการลบข้อมูลต่อหรือไม่?(y/n): ");
-                choice = getchar();
-                int c;while ((c = getchar()) != '\n' && c != EOF);
-
-                if (choice == 'y' || choice == 'Y')break; 
-                else if (choice == 'n' || choice == 'N') return; 
-                else printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
-                 
-                  
-            } while (1);
-        } else {
-            continueUpdate = 0; // สำหรับ E2E test ไม่ต้องถาม
-        }
-
-    } while (1);
+        // ลบจริง
+        records[found].status = 0;
+        saveData(records, count, filename);
+        printf("✅ ลบข้อมูลเรียบร้อยแล้ว\n");
+    }
 }
-void restoreRepair(const char *filename,const char* ID, int isTest) {
+
+void restoreRepair(const char *filename, const char* ID, int isTest) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
     if (count == 0) {
         printf("❌ ไม่มีข้อมูลในระบบ\n");
         return;
     }
-    int continueUpdate = 1;
-    char choice;
-    do {
-        printDeletedRecords(records, count);
 
-        char targetID[20];
-        if (ID != NULL) {
-        // ถ้าได้รับ ID จาก argument ใช้เลย
+    char targetID[20];
+
+    if (ID != NULL) {
+        // ใช้ ID ที่ส่งมาโดยตรงสำหรับ E2E test
         strcpy(targetID, ID);
-        } else {
+    } else {
         // ถ้าไม่ได้รับ argument ให้ถามผู้ใช้
+        printDeletedRecords(records, count);
         printf("\nกรอก RepairID ที่ต้องการกู้คืน: ");
         fgets(targetID, sizeof(targetID), stdin);
         targetID[strcspn(targetID, "\n")] = 0;
-        }
-        toUpperStr(targetID);
-
-        int found = -1;
-        for (int i = 0; i < count; i++) {
-            char tempID[20];
-            strcpy(tempID, records[i].id);
-            toUpperStr(tempID);
-            if (strcmp(tempID, targetID) == 0 && records[i].status == 0) {
-                found = i;
-                break;
-            }
-        }
-
-        if (found == -1) {
-            printf("❌ ไม่พบ ID นี้ในรายการที่ถูกลบ\n");
-        } else {
-            printf("✅ คุณต้องการกู้คืนข้อมูล ID: %s ใช่หรือไม่? (y/n): ", records[found].id);
-            choice = getchar();
-            int c; while ((c = getchar()) != '\n' && c != EOF);
-
-            if (choice == 'y' || choice == 'Y') {
-                records[found].status = 1;
-                saveData(records, count, filename);
-                printf("♻️  กู้คืนข้อมูลเรียบร้อยแล้ว\n");
-            } else {
-                printf("❌ ยกเลิกการกู้คืน\n");
-            }
-        }
-        if (!isTest) {
-            do {
-                printf("\nต้องการกู้คืนข้อมูลต่อหรือไม่? (y/n): ");
-                choice = getchar();
-                int c; while ((c = getchar()) != '\n' && c != EOF);
-                if (choice == 'y' || choice == 'Y') break;
-                else if (choice == 'n' || choice == 'N') return;
-                else printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
-            } while (1);
-        } else {
-        continueUpdate = 0; // สำหรับ E2E test ไม่ต้องถาม
     }
-    } while (1);
+
+    toUpperStr(targetID);
+
+    int found = -1;
+    for (int i = 0; i < count; i++) {
+        char tempID[20];
+        strcpy(tempID, records[i].id);
+        toUpperStr(tempID);
+        if (strcmp(tempID, targetID) == 0 && records[i].status == 0) {
+            found = i;
+            break;
+        }
+    }
+
+    if (found == -1) {
+        printf("❌ ไม่พบ ID นี้ในรายการที่ถูกลบ\n");
+        return;
+    }
+
+    if (!isTest) {
+        char choice;
+        printf("✅ คุณต้องการกู้คืนข้อมูล ID: %s ใช่หรือไม่? (y/n): ", records[found].id);
+        choice = getchar();
+        int c; while ((c = getchar()) != '\n' && c != EOF);
+
+        if (choice != 'y' && choice != 'Y') {
+            printf("❌ ยกเลิกการกู้คืน\n");
+            return;
+        }
+    }
+
+    // กู้คืนข้อมูล
+    records[found].status = 1;
+    saveData(records, count, filename);
+    printf("♻️  กู้คืนข้อมูลเรียบร้อยแล้ว\n");
 }
+
 void deleteOrRestoreMenu() {
     int choice;
     do {
