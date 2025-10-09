@@ -361,7 +361,7 @@ void searchRepair() {
 
     } while (1);
 }
-void updateRepair(const char *filename) {
+void updateRepair(const char *filename,const char* ID) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
     if (count == 0) {
@@ -374,9 +374,15 @@ void updateRepair(const char *filename) {
         printTable(records, count, filename);
 
         char targetID[20];
+        if (ID != NULL) {
+        // ถ้าได้รับ ID จาก argument ใช้เลย
+        strcpy(targetID, ID);
+        } else {
+        // ถ้าไม่ได้รับ argument ให้ถามผู้ใช้
         printf("\nกรอก RepairID ที่ต้องการอัปเดต: ");
         fgets(targetID, sizeof(targetID), stdin);
         targetID[strcspn(targetID, "\n")] = 0;
+        }
         toUpperStr(targetID);
 
         int found = -1;
@@ -405,48 +411,54 @@ void updateRepair(const char *filename) {
 
         printf("\n--- อัปเดตรายการ ID: %s ---\n", records[found].id);
 
-        
-        while (1) {
-            printf("RepairID: ");
-            fgets(records[found].id, sizeof(records[found].id), stdin);
-            records[found].id[strcspn(records[found].id, "\n")] = 0;
+        if (ID == NULL) {
+            while (1) {
+                printf("RepairID: ");
+                fgets(records[found].id, sizeof(records[found].id), stdin);
+                records[found].id[strcspn(records[found].id, "\n")] = 0;
 
-            if (!hasLetter(records[found].id)) {
+                if (!hasLetter(records[found].id)) {
                 printf("❌ ID ต้องมีตัวอักษรอย่างน้อย 1 ตัว\n");
                 continue;
-            }
+                }
             
-            toUpperStr(records[found].id);
+                toUpperStr(records[found].id);
             break;
+            }
+
+        
+            do {
+                printf("Car Model: ");
+                fgets(records[found].model, sizeof(records[found].model), stdin);
+                records[found].model[strcspn(records[found].model, "\n")] = 0;
+            } while (!hasLetterCount(records[found].model, 2));
+
+        
+            printf("Repair Details: ");
+            fgets(records[found].problem, sizeof(records[found].problem), stdin);
+            records[found].problem[strcspn(records[found].problem, "\n")] = 0;
+
+        
+            char costStr[20];
+            int validCost;
+            do {
+                validCost = 1;
+                printf("Cost: ");
+                fgets(costStr, sizeof(costStr), stdin);
+                costStr[strcspn(costStr, "\n")] = 0;
+                for (int i = 0; costStr[i]; i++)
+                    if (!isdigit(costStr[i])) validCost = 0;
+                if (!validCost) printf("❌ กรุณากรอกตัวเลขเท่านั้น\n");
+            } while (!validCost);
+            records[found].cost = atoi(costStr);
+
+        } else {
+        // สำหรับ test สามารถอัปเดตเป็นค่า default หรือ test value ได้
+        strcpy(records[found].model, "Updated Model");
+        strcpy(records[found].problem, "Updated Problem");
+        records[found].cost = 999;
         }
 
-        
-        do {
-            printf("Car Model: ");
-            fgets(records[found].model, sizeof(records[found].model), stdin);
-            records[found].model[strcspn(records[found].model, "\n")] = 0;
-        } while (!hasLetterCount(records[found].model, 2));
-
-        
-        printf("Repair Details: ");
-        fgets(records[found].problem, sizeof(records[found].problem), stdin);
-        records[found].problem[strcspn(records[found].problem, "\n")] = 0;
-
-        
-        char costStr[20];
-        int validCost;
-        do {
-            validCost = 1;
-            printf("Cost: ");
-            fgets(costStr, sizeof(costStr), stdin);
-            costStr[strcspn(costStr, "\n")] = 0;
-            for (int i = 0; costStr[i]; i++)
-                if (!isdigit(costStr[i])) validCost = 0;
-            if (!validCost) printf("❌ กรุณากรอกตัวเลขเท่านั้น\n");
-        } while (!validCost);
-        records[found].cost = atoi(costStr);
-
-        
         saveData(records, count, filename);
         printf("\n✅ อัปเดตข้อมูลเรียบร้อยแล้ว!\n");
         printTable(records, count, filename);
@@ -470,7 +482,7 @@ void updateRepair(const char *filename) {
         }
     }
 }
-void deleteRepair(const char *filename) {
+void deleteRepair(const char *filename,const char* ID) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
     if (count == 0) {
@@ -483,9 +495,16 @@ void deleteRepair(const char *filename) {
         printTable(records, count, filename); 
 
         char targetID[20];
-        printf("\nกรอก RepairID ที่ต้องการลบ: ");
+        if (ID != NULL) {
+        // ถ้าได้รับ ID จาก argument ใช้เลย
+        strcpy(targetID, ID);
+        } else {
+        // ถ้าไม่ได้รับ argument ให้ถามผู้ใช้
+        printf("กรอก RepairID ที่ต้องการลบ: ");
         fgets(targetID, sizeof(targetID), stdin);
         targetID[strcspn(targetID, "\n")] = 0;
+        }
+        
         toUpperStr(targetID);
 
         int found = -1;
@@ -531,7 +550,7 @@ void deleteRepair(const char *filename) {
 
     } while (1);
 }
-void restoreRepair(const char *filename) {
+void restoreRepair(const char *filename,const char* ID) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
     if (count == 0) {
@@ -544,9 +563,15 @@ void restoreRepair(const char *filename) {
         printDeletedRecords(records, count);
 
         char targetID[20];
+        if (ID != NULL) {
+        // ถ้าได้รับ ID จาก argument ใช้เลย
+        strcpy(targetID, ID);
+        } else {
+        // ถ้าไม่ได้รับ argument ให้ถามผู้ใช้
         printf("\nกรอก RepairID ที่ต้องการกู้คืน: ");
         fgets(targetID, sizeof(targetID), stdin);
         targetID[strcspn(targetID, "\n")] = 0;
+        }
         toUpperStr(targetID);
 
         int found = -1;
@@ -598,10 +623,10 @@ void deleteOrRestoreMenu() {
 
         switch (choice) {
             case 1:
-                deleteRepair("data.csv");
+                deleteRepair("data.csv",NULL);
                 break;
             case 2:
-                restoreRepair("data.csv");
+                restoreRepair("data.csv",NULL);
                 break;
             case 3:
                 printf("กลับไปหน้าเมนูหลัก...\n");
