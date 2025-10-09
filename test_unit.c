@@ -1,17 +1,10 @@
-
 #include <assert.h>
 #include <stdio.h>
 #include "main.h"
 #include "test.h"
 
 
-void runUnitTests() {
-    printf("=== รัน Unit Tests ===\n");
-    test_checkID();
-    test_addRepair();
-    // เพิ่ม unit test อื่น ๆ ได้ที่นี่
-    printf("✅ Unit Tests เสร็จสิ้น\n");
-}
+
 void ensureTestFileExists(const char* filename) {
     FILE* fp = fopen(filename, "r");
     if (fp == NULL) {
@@ -26,7 +19,13 @@ void ensureTestFileExists(const char* filename) {
         fclose(fp);
     }
 }
-
+void runUnitTests() {
+    printf("=== รัน Unit Tests ===\n");
+    test_checkID();
+    test_addRepair();
+    
+    printf("✅ Unit Tests เสร็จสิ้น\n");
+}
 
 void test_checkID() {
     const char* testFile = "test_data.csv";
@@ -37,7 +36,7 @@ void test_checkID() {
 
 void test_addRepair() {
     const char* testFile = "test_data.csv";
-    addRepair(testFile, "B999", "Honda Jazz", "Replace tires", 3000);
+    addRepairToFile(testFile, "B999", "Honda Jazz", "Replace tires", 3000);
     assert(checkID(testFile, "B999") == 1);
     printf("✅ test_addRepair ผ่านแล้ว\n");
 }
