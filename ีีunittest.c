@@ -56,9 +56,5 @@ int main() {
     test_addRepair();
     return 0;
 
-
-    test_checkID();
-    test_addRepair();
-    return 0;
 }
 
