@@ -11,10 +11,11 @@ R010,ORA,Air Conditioning Repair,850,1
 R011,volvo xc40,Air Conditioning Repair,2500,1
 R012,audi e-tron,Oil Change,1250,1
 R013,AUDI,Electrical Repair,4000,1
-R014,BMW,Brake Repair | Oil Change,4760,1
+R014,BMW,Brake Repair*Oil Change,4500,1
 R015,PORSCHE,Oil Change,890,1
 R016,porsche taycan,Tire Replacement,4000,1
 R017,mini cooper,Tire Replacement,2100,1
 R018,MINICOOPER SE,Engine Repair,2500,1
 R019,MG,Cooling System Repair,3200,1
 R020,tesla,Oil Change,600,0
+R021,FORD,oil change*bom,5000,1
