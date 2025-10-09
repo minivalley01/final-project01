@@ -407,7 +407,7 @@ void searchRepair() {
 
     } while (1);
 }
-void updateRepair(const char *filename, const char *ID, const char *newCar, const char *newDetails, int newExpense) {
+void updateRepair(const char *filename, const char *ID, const char *newCar, const char *newDetails, int newExpense, int isTest) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
     if (count == 0) {
@@ -484,32 +484,36 @@ void updateRepair(const char *filename, const char *ID, const char *newCar, cons
         printf("\n✅ อัปเดตข้อมูลเรียบร้อยแล้ว!\n");
         printTable(records, count, filename);
 
-        char choice;
-        while (1) {
-            printf("ต้องการอัพเดตต่อหรือไม่?(y/n): ");
-            choice = getchar();
-            while (getchar() != '\n'); 
+        if (!isTest) {
+            char choice;
+            while (1) {
+                printf("ต้องการอัพเดตต่อหรือไม่?(y/n): ");
+                choice = getchar();
+                while (getchar() != '\n'); 
 
-            if (choice == 'y' || choice == 'Y') {
-                break; 
-            } else if (choice == 'n' || choice == 'N') {
-                continueUpdate = 0; 
-                printf("✅ กลับสู่เมนูหลัก\n");
-                break;
-            } else {
-                printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
+                if (choice == 'y' || choice == 'Y') {
+                    break; 
+                } else if (choice == 'n' || choice == 'N') {
+                    continueUpdate = 0; 
+                    printf("✅ กลับสู่เมนูหลัก\n");
+                    break;
+                } else {
+                    printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
+                }
             }
-        }
+        } else {
+        continueUpdate = 0; // สำหรับ E2E test ไม่ต้องถาม
     }
 }
-void deleteRepair(const char *filename,const char* ID) {
+}
+void deleteRepair(const char *filename,const char* ID, int isTest) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
     if (count == 0) {
         printf("❌ ไม่มีข้อมูลให้ลบ\n");
         return;
     }
-
+    int continueUpdate = 1;
     char choice;
     do {
         printTable(records, count, filename); 
@@ -557,27 +561,32 @@ void deleteRepair(const char *filename,const char* ID) {
             }
         }
 
-        
-        do {
-            printf("\nต้องการลบข้อมูลต่อหรือไม่?(y/n): ");
-            choice = getchar();
-            int c;while ((c = getchar()) != '\n' && c != EOF);
+        if (!isTest) {
+            do {
+                printf("\nต้องการลบข้อมูลต่อหรือไม่?(y/n): ");
+                choice = getchar();
+                int c;while ((c = getchar()) != '\n' && c != EOF);
 
-            if (choice == 'y' || choice == 'Y')break; 
-            else if (choice == 'n' || choice == 'N') return; 
-            else printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
-        } while (1);
+                if (choice == 'y' || choice == 'Y')break; 
+                else if (choice == 'n' || choice == 'N') return; 
+                else printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
+                 
+                  
+            } while (1);
+        } else {
+            continueUpdate = 0; // สำหรับ E2E test ไม่ต้องถาม
+        }
 
     } while (1);
 }
-void restoreRepair(const char *filename,const char* ID) {
+void restoreRepair(const char *filename,const char* ID, int isTest) {
     struct Record records[MAX_RECORDS];
     int count = loadData(records, filename);
     if (count == 0) {
         printf("❌ ไม่มีข้อมูลในระบบ\n");
         return;
     }
-
+    int continueUpdate = 1;
     char choice;
     do {
         printDeletedRecords(records, count);
@@ -620,16 +629,18 @@ void restoreRepair(const char *filename,const char* ID) {
                 printf("❌ ยกเลิกการกู้คืน\n");
             }
         }
-
-        do {
-            printf("\nต้องการกู้คืนข้อมูลต่อหรือไม่? (y/n): ");
-            choice = getchar();
-            int c; while ((c = getchar()) != '\n' && c != EOF);
-            if (choice == 'y' || choice == 'Y') break;
-            else if (choice == 'n' || choice == 'N') return;
-            else printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
-        } while (1);
-
+        if (!isTest) {
+            do {
+                printf("\nต้องการกู้คืนข้อมูลต่อหรือไม่? (y/n): ");
+                choice = getchar();
+                int c; while ((c = getchar()) != '\n' && c != EOF);
+                if (choice == 'y' || choice == 'Y') break;
+                else if (choice == 'n' || choice == 'N') return;
+                else printf("⚠️ กรุณากรอกเฉพาะ y หรือ n เท่านั้น\n");
+            } while (1);
+        } else {
+        continueUpdate = 0; // สำหรับ E2E test ไม่ต้องถาม
+    }
     } while (1);
 }
 void deleteOrRestoreMenu() {
@@ -643,10 +654,10 @@ void deleteOrRestoreMenu() {
 
         switch (choice) {
             case 1:
-                deleteRepair("data.csv",NULL);
+                deleteRepair("data.csv",NULL,0);
                 break;
             case 2:
-                restoreRepair("data.csv",NULL);
+                restoreRepair("data.csv",NULL,0);
                 break;
             case 3:
                 printf("กลับไปหน้าเมนูหลัก...\n");
@@ -671,10 +682,10 @@ void runE2ETests() {
     assert(checkID(E2E_FILE, "R999") == 0); // ซ้ำ
 
     // 2️⃣ อัพเดตข้อมูล
-    updateRepair(E2E_FILE, "R999", "Honda Jazz", "Replace engine", 5000);
+    updateRepair(E2E_FILE, "R999", "Honda Jazz", "Replace engine", 5000,1);
 
     // 3️⃣ ลบข้อมูล
-    deleteRepair(E2E_FILE, "R999");
+    deleteRepair(E2E_FILE, "R999",1);
 
     // 4️⃣ ตรวจสอบว่า status = 0
     struct Record records[MAX_RECORDS];
@@ -690,7 +701,7 @@ void runE2ETests() {
     assert(records[found].status == 0);
 
     // 5️⃣ กู้คืนข้อมูล
-    restoreRepair(E2E_FILE, "R999");
+    restoreRepair(E2E_FILE, "R999",1);
 
     // 6️⃣ ตรวจสอบว่า status = 1
     count = loadData(records, E2E_FILE);
