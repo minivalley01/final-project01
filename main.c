@@ -2,18 +2,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "main.h"
 
 
 #define MAX_LINE 256
 #define MAX_RECORDS 100
 
-struct Record {
-    char id[20];
-    char model[50];
-    char problem[500];
-    int cost;
-    int status; // 1=active, 0=deleted
-};
+//struct Record {
+    //char id[20];
+    //char model[50];
+    //char problem[500];
+    //int cost;
+    //int status; // 1=active, 0=deleted
+//};
 
 
 
@@ -83,7 +84,7 @@ int getIntegerInput(const char *message) { // ใช้ตรวจสอบว�
 
     return number;
 }
-int checkID(char *ID) { 
+int checkID(const char *filename, const char *ID) { 
     FILE *fp = fopen("data.csv", "r");
     if (fp == NULL) return 1; // ถ้าไฟล์ยังไม่มี ให้ผ่านไปเลย
     if (strlen(ID) > 4 || strlen(ID) < 4) { //เช็คจำนวนตัวอักษร
@@ -227,7 +228,7 @@ void addRepair() {
             }
             toUpperStr(ID);
 
-            if (checkID(ID)) {
+            if (checkID("data.csv",ID)) {
                 break; 
             } else {
                 printf("Please try again\n");
@@ -616,7 +617,7 @@ void deleteOrRestoreMenu() {
 
 
 
-
+#ifndef UNIT_TEST
 int main() {
     
 
@@ -670,3 +671,4 @@ int main() {
 
     return 0;
 }
+#endif
