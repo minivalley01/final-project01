@@ -661,11 +661,22 @@ int main() {
                     printTable(records,count,"data.csv");
             }
             break;
-            case 6: runUnitTests(); break;
-            //case 7: runE2ETests(); break;
-            case 0:
-               printf("ออกจากโปรแกรมแล้ว ขอบคุณที่ใช้งาน!\n");
-                exit(0);
+            case 6: if (confirmAction("คุณต้องการ Run unit_test ใช่ไหม")) {
+                        runUnitTests();
+                    } else {
+                     printf("กำลังกลับไปหน้าเมนู\n");
+                    }
+            case 7: if (confirmAction("คุณต้องการ Run E2E_test ใช่ไหม")) {
+                        runE2ETests();
+                    } else {
+                     printf("กำลังกลับไปหน้าเมนู\n");
+                    }
+            case 0:if (confirmAction("คุณต้องการออกจากโปรเเกรมใช่ไหม")) {
+                        printf("ออกจากโปรแกรมแล้ว ขอบคุณที่ใช้งาน!\n");
+                        exit(0);
+                    } else {
+                     printf("กำลังกลับไปหน้าเมนู\n");
+                    }
             default:
                 printf("เลือกเมนูไม่ถูกต้อง กรุณาลองใหม่\n");
         }
