@@ -24,14 +24,14 @@ int confirmAction(const char *message) {
 
     while (1) {
         printf("%s (y/n): ", message);
-        scanf(" %c", &choice1);  // มีช่องว่างหน้า %c เพื่อข้ามช่องว่างหรือ \n
+        scanf(" %c", &choice1);  
         getchar();
-        choice1 = tolower(choice1);  // แปลงเป็นตัวพิมพ์เล็กให้เทียบง่าย
+        choice1 = tolower(choice1);  
 
         if (choice1 == 'y') {
-            return 1;  // ยืนยัน
+            return 1;  
         } else if (choice1 == 'n') {
-            return 0;  // ยกเลิก
+            return 0;  
         } else {
             printf("⚠️  กรุณากรอกแค่ y หรือ n เท่านั้น\n");
         }
